@@ -1,6 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, session
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, EqualTo
 from flask_login import (
     LoginManager,
@@ -54,11 +54,38 @@ def load_user(user_id):
         return User(int(id), name)
 
 
+# @login_manager.request_loader
+# def load_user_from_request(request):
+#
+#    # first, try to login using the api_key url arg
+#    api_key = request.args.get('api_key')
+#    if api_key:
+#        user = User.query.filter_by(api_key=api_key).first()
+#        if user:
+#            return user
+#
+#    # next, try to login using Basic Auth
+#    api_key = request.headers.get('Authorization')
+#    if api_key:
+#        api_key = api_key.replace('Basic ', '', 1)
+#        try:
+#            api_key = base64.b64decode(api_key)
+#        except TypeError:
+#            pass
+#        user = User.query.filter_by(api_key=api_key).first()
+#        if user:
+#            return user
+#
+#    # finally, return None if both methods did not login the user
+#    return None
+
+
 class LoginForm(FlaskForm):
     username = StringField(
         "Username", validators=[DataRequired(), Length(min=4, max=25)]
     )
     password = PasswordField("Password", validators=[DataRequired()])
+    remember_me = BooleanField("Remember Me")
     submit = SubmitField("Login")
 
 
@@ -90,7 +117,9 @@ def login():
 
             if bcrypt.checkpw(password.encode("utf-8"), hashed_password):
                 new_user = User(id=id, name=name)
-                login_user(new_user)
+                remember_me = form.remember_me.data
+                print(f"remember_me={remember_me}")
+                login_user(new_user, remember=remember_me)
                 flash("Logged in successfully.", "success")
                 return redirect(url_for("dashboard"))
             else:
@@ -120,22 +149,25 @@ def signup():
     return render_template("signup.html", form=form)
 
 
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    session.clear()
+    flash("You have been logged out.", "info")
+    return redirect(url_for("login"))
+
+
 @app.route("/dashboard")
 @login_required
 def dashboard():
     return render_template("dashboard.html", user=current_user)
 
 
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    flash("You have been logged out.", "info")
-    return redirect(url_for("login"))
-
-
 @app.route("/")
 def index():
+    if current_user.is_authenticated:
+        return redirect(url_for("dashboard"))
     return render_template("index.html")
 
 
