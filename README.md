@@ -27,5 +27,6 @@ User:
 	- 	Name
 	-	Password
 	
-
+## Links
 			
+- https://medium.com/analytics-vidhya/how-to-use-flask-login-with-sqlite3-9891b3248324
