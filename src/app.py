@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, session
+from flask import Flask, render_template, redirect, url_for, flash, session, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, EqualTo
@@ -11,11 +11,14 @@ from flask_login import (
     current_user,
 )
 import bcrypt
+import datetime
 
 import db
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "your_secret_key_here"
+app.config["REMEMBER_COOKIE_DURATION"] = datetime.timedelta(days=356)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -100,6 +103,12 @@ class SignupForm(FlaskForm):
     submit = SubmitField("Sign Up")
 
 
+class CreateEventForm(FlaskForm):
+    event_name = StringField("Event Name")
+    event_type = StringField("Event Type")
+    submit = SubmitField("Create Event")
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -118,7 +127,6 @@ def login():
             if bcrypt.checkpw(password.encode("utf-8"), hashed_password):
                 new_user = User(id=id, name=name)
                 remember_me = form.remember_me.data
-                print(f"remember_me={remember_me}")
                 login_user(new_user, remember=remember_me)
                 flash("Logged in successfully.", "success")
                 return redirect(url_for("dashboard"))
@@ -161,7 +169,43 @@ def logout():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html", user=current_user)
+    form = CreateEventForm()
+    events = db.get_all_events_by_owner(current_user.id)
+    return render_template(
+        "dashboard.html", user=current_user, form=form, events=events
+    )
+
+
+@app.route("/create_event", methods=["POST"])
+@login_required
+def create_event():
+    form = CreateEventForm()
+    event_name = form.event_name.data
+    event_type = form.event_type.data
+    print(f"create event {event_name} {event_type}")
+    db.insert_event(event_name=event_name, event_type=event_type, owner=current_user.id)
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/create_occurence", methods=["POST"])
+@login_required
+def create_occurence():
+    id = request.args.get("id")
+    data = request.get_json()
+    print(f"create occurence {id}, {data}")
+    db.insert_occurence_of_event(event_id=id)
+    return redirect(url_for("dashboard"))
+
+
+@app.route("/create_measurement", methods=["POST"])
+@login_required
+def create_measurement():
+    id = request.args.get("id")
+    print(f"create occurence {id}")
+    data = request.get_json()
+    print(f"create measurement {id}, {data}")
+    #db.insert_measurement_of_event(event_id=id, data["value"])
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/")

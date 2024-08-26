@@ -3,8 +3,13 @@
 
 <head>
   {% block head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
   <title>{% block title %}{% endblock %} - ClockIn</title>
   {% endblock %}
 </head>
@@ -12,9 +17,11 @@
 <body>
   <div>{% block content %}{% endblock %}</div>
   <div>
-    {% block footer %}
-    &copy; Copyright 2024 Jakob Maier.
-    {% endblock %}
+    <small>
+      {% block footer %}
+      &copy; Copyright 2024 Jakob Maier.
+      {% endblock %}
+    </small>
   </div>
 </body>
 
