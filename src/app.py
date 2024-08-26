@@ -23,13 +23,35 @@ login_manager.login_view = "login"
 
 
 class User(UserMixin):
-    def __init__(self, id):
+    def __init__(self, id, name):
         self.id = id
+        self.name = name
+        self.authenticated = False
+
+    def is_active(self):
+        return self.is_active()
+
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_active(self):
+        return True
+
+    def get_id(self):
+        return self.id
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User(user_id)
+    user = db.get_user_by_id(user_id)
+    if not user:
+        return None
+    else:
+        (id, name, hash) = user
+        return User(int(id), name)
 
 
 class LoginForm(FlaskForm):
@@ -44,7 +66,7 @@ class SignupForm(FlaskForm):
     username = StringField(
         "Username", validators=[DataRequired(), Length(min=4, max=25)]
     )
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=6)])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=4)])
     confirm_password = PasswordField(
         "Confirm Password", validators=[DataRequired(), EqualTo("password")]
     )
@@ -67,8 +89,8 @@ def login():
             (id, name, hashed_password) = user
 
             if bcrypt.checkpw(password.encode("utf-8"), hashed_password):
-                user = User(id=form.username.data)
-                login_user(user)
+                new_user = User(id=id, name=name)
+                login_user(new_user)
                 flash("Logged in successfully.", "success")
                 return redirect(url_for("dashboard"))
             else:
@@ -101,7 +123,7 @@ def signup():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return f"Hello, {current_user.id}! Welcome to your dashboard."
+    return render_template("dashboard.html", user=current_user)
 
 
 @app.route("/logout")

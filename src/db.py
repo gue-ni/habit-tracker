@@ -31,3 +31,13 @@ def get_user_by_name(username):
     con.close()
     return user
 
+def get_user_by_id(id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    query = "SELECT id, name, password FROM users WHERE id = ?"
+    cur.execute(query, (id,))
+    user = cur.fetchone()
+    con.commit()
+    con.close()
+    return user
+

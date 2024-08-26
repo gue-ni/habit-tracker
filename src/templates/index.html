@@ -1,21 +1,16 @@
 {% extends "layout.html" %}
 {% block title %}Index{% endblock %}
 {% block content %}
-<h1>Index</h1>
+<h1>ClockIn</h1>
 <div>
   <p>
-
-    Welcome on my awesome homepage.
+    Welcome on my awesome website.
   </p>
   <p>
-
-    <a href="/login">login</a>
+    <a href="{{ url_for('login') }}">Login</a>
   </p>
   <p>
-
-    <a href="/signup">Signup</a>
+    <a href="{{ url_for('signup') }}">Signup</a>
   </p>
-
-
 </div>
 {% endblock %}
