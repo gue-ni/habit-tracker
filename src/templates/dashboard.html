@@ -1,12 +1,61 @@
 {% extends "layout.html" %}
-{% block title %}Index{% endblock %}
+{% block title %}Dashboard{% endblock %}
 {% block content %}
 <h1>Dashboard</h1>
 <p>
   Hello <i>{{ user.name }}</i>, this is your dashboard!
 </p>
 <p>
-  <a href="{{ url_for('login') }}">Logout</a>
+  <a href="{{ url_for('logout') }}">Logout</a>
 </p>
+
+
+<p><a href="{{ url_for('create_new_event') }}">Create New Event</a></p>
+
+<div>
+  <h2>Events</h2>
+  <div>
+    <input type="search" name="search" id="" placeholder="filter">
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Event Name</th>
+        <th>Event Tag</th>
+        <th>Event Type</th>
+        <th>adsf</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in events %}
+      <tr>
+        <td>
+          <a href="{{url_for('event', id=event[0]) }}">{{ event[1] }}</a>
+        </td>
+        <td>{{ event[2] }}</td>
+        <td>{{ event[3] }}</td>
+        <td>
+          {% if event[3] == "OCCURENCE" %}
+          <button onclick="createOccurence({{ event[0] }})">Record Occurence!</button>
+          {% else %}
+          <!--
+          <div>
+            <a href="{{ url_for('create_measurement') }}">
+            <button onclick="">Record Value!</button>
+            </a>
+          </div>
+          -->
+          <button onclick="createMeasurement({{ event[0] }})">Record Value!</button>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td>No events found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 {% endblock %}

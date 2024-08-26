@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Create New Event{% endblock %}
+{% block content %}
+<div>
+  <h1>Create New Event</h1>
+  <form method="POST" action="{{ url_for('create_event') }}">
+    {{ form.hidden_tag() }}
+
+    <div>
+      {{ form.event_name.label }}<br>
+      {{ form.event_name(size=32) }}<br>
+    </div>
+
+    <div>
+      {{ form.event_tag.label }}<br>
+      {{ form.event_tag(size=32) }}<br>
+    </div>
+
+    <div>
+      {{ form.event_type.label }}<br>
+      {{ form.event_type() }}<br>
+    </div>
+
+    <div>
+      {{ form.submit() }}
+    </div>
+  </form>
+</div>
+
+
+
+{% endblock %}
