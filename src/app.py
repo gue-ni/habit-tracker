@@ -1,4 +1,13 @@
-from flask import Flask, render_template, redirect, url_for, flash, session, request, Blueprint
+from flask import (
+    Flask,
+    render_template,
+    redirect,
+    url_for,
+    flash,
+    session,
+    request,
+    Blueprint,
+)
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo
@@ -110,12 +119,24 @@ class EventType(Enum):
     NUMERIC = "NUMERIC"
 
 
+class EventFrequency(Enum):
+    DAILY = "DAILY"
+    THRICE_PER_WEEK = "THRICE_PER_WEEK"
+    TWICE_PER_WEEK = "TWICE_PER_WEEK"
+    WEEKLY = "WEEKLY"
+
+
 class CreateEventForm(FlaskForm):
     event_name = StringField("Event Name", validators=[DataRequired()])
     event_tag = StringField("Event Tag", validators=[DataRequired()])
     event_type = SelectField(
         "Event Type",
         choices=[(e.name, e.value) for e in EventType],
+        validators=[DataRequired()],
+    )
+    event_freq = SelectField(
+        "Event Frequency",
+        choices=[(e.name, e.value) for e in EventFrequency],
         validators=[DataRequired()],
     )
     submit = SubmitField("Create Event")
@@ -190,42 +211,44 @@ def dashboard():
     return render_template("dashboard.html", user=current_user, events=events)
 
 
-@app.route("/create_new_event")
-@login_required
-def create_new_event():
-    form = CreateEventForm()
-    return render_template("create_new_event.html", form=form)
+@app.route("/event/<int:id>", methods=["GET"])
+def event(id):
+    event = db.get_event_by_id(event_id=id, user_id=current_user.id)
+    print(event)
+    return render_template("event.html", event=event)
 
-@app.route("/record_event/<id>")
+
+@app.route("/event/new", methods=["GET", "POST"])
+@login_required
+def new_event():
+    form = CreateEventForm()
+
+    if request.method == "POST":
+        event_name = form.event_name.data
+        event_tag = form.event_tag.data
+        event_type = form.event_type.data
+        db.insert_event(
+            event_name=event_name,
+            event_tag=event_tag,
+            owner=current_user.id,
+            event_type=event_type,
+        )
+        return redirect(url_for("dashboard"))
+
+    else:
+        return render_template("new_event.html", form=form)
+
+
+@app.route("/event/<int:id>/record", methods=["GET", "POST"])
 @login_required
 def record_event(id):
-    event = db.get_event_by_id(event_id=id, owner=current_user.id)
-    return render_template("record_event.html", event=event)
-
-@app.route("/create_event", methods=["POST"])
-@login_required
-def create_event():
-    form = CreateEventForm()
-    event_name = form.event_name.data
-    event_tag = form.event_tag.data
-    event_type = form.event_type.data
-    print(f"create event {event_name} {event_tag}, {event_type}")
-    db.insert_event(
-        event_name=event_name,
-        event_tag=event_tag,
-        owner=current_user.id,
-        event_type=event_type,
-    )
-    return redirect(url_for("dashboard"))
-
-
-@app.route("/create_occurence", methods=["POST"])
-@login_required
-def create_occurence():
-    id = request.args.get("id")
-    data = request.get_json()
-    db.insert_occurence_of_event(event_id=id)
-    return redirect(url_for("dashboard"))
+    if request.method == "POST":
+        db.insert_occurence_of_event(event_id=id)
+        return redirect(url_for("dashboard"))
+    else:
+        event = db.get_event_by_id(event_id=id, user_id=current_user.id)
+        print(event)
+        return render_template("record_event.html", event=event)
 
 
 @app.route("/create_measurement", methods=["GET", "POST"])
@@ -240,11 +263,6 @@ def create_measurement():
         return redirect(url_for("dashboard"))
     else:
         return "test"
-
-
-@app.route("/event/<id>", methods=["GET"])
-def event(id):
-    return render_template("event.html")
 
 
 @app.route("/")

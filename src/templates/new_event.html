@@ -3,7 +3,7 @@
 {% block content %}
 <div>
   <h1>Create New Event</h1>
-  <form method="POST" action="{{ url_for('create_event') }}">
+  <form method="POST" action="{{ url_for('new_event') }}">
     {{ form.hidden_tag() }}
 
     <div>
@@ -20,6 +20,13 @@
       {{ form.event_type.label }}<br>
       {{ form.event_type() }}<br>
     </div>
+
+    <div>
+      {{ form.event_freq.label }}<br>
+      {{ form.event_freq() }}<br>
+    </div>
+
+
 
     <div>
       {{ form.submit() }}

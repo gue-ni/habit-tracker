@@ -44,13 +44,22 @@ def get_user_by_id(id):
     return user
 
 
-def insert_event(event_name, event_tag, owner, event_type):
+def insert_event(
+    event_name, event_tag, owner, event_type, frequency="DAILY", description=None
+):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = (
-        "INSERT INTO events (event_name,event_tag,user_id,event_type) VALUES (?,?,?,?)"
+    query = "INSERT INTO events (event_name, event_tag, user_id, event_type, event_freq) VALUES (?,?,?,?,?)"
+    cur.execute(
+        query,
+        (
+            event_name,
+            event_tag,
+            owner,
+            event_type,
+            frequency,
+        ),
     )
-    cur.execute(query, (event_name, event_tag, owner, event_type))
     con.commit()
     con.close()
 
@@ -64,11 +73,18 @@ def get_all_events_by_owner(user_id):
     con.close()
     return result
 
+
 def get_event_by_id(user_id, event_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
     query = "SELECT id, event_name, event_tag, event_type FROM events WHERE user_id = ? AND id = ?"
-    cur.execute(query, (user_id, event_id, ))
+    cur.execute(
+        query,
+        (
+            user_id,
+            event_id,
+        ),
+    )
     result = cur.fetchone()
     con.close()
     return result

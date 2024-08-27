@@ -1,17 +1,44 @@
 {% extends "layout.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<h1>Dashboard</h1>
+<h1>Habits</h1>
 <p>
-  Hello <i>{{ user.name }}</i>, this is your dashboard!
-</p>
-<p>
-  <a href="{{ url_for('logout') }}">Logout</a>
+  Hello <i>{{ user.name }}</i>!
 </p>
 
-
-<p><a href="{{ url_for('create_new_event') }}">Create New Event</a></p>
-
+<div>
+  <p>
+    <a href="{{ url_for('new_event') }}">Create New Event</a>
+  </p>
+</div>
+<div>
+  <!--
+  The events that need to be done today, sorted by which event expires first
+  -->
+  <h2>To Do</h2>
+  <div>
+    {% for event in events %}
+    <div>
+      <a href="{{ url_for('record_event', id=event[0]) }}">{{ event[1] }}</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<div>
+  <!--
+  The events that have been done
+  This is a grid, where the columns are the days of the week
+  and the rows are the events, with an emoji and the name on the left
+  -->
+  <h2>Done</h2>
+  <div>
+    {% for event in events %}
+    <div>
+      <a href="{{ url_for('event', id=event[0]) }}">{{ event[1] }}</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 <div>
   <h2>Events</h2>
   <div>
@@ -57,5 +84,12 @@
     </tbody>
   </table>
 </div>
+<div>
+  <p>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </p>
+</div>
+
+
 
 {% endblock %}
