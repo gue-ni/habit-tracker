@@ -29,7 +29,7 @@
   This is a grid, where the columns are the days of the week
   and the rows are the events, with an emoji and the name on the left
   -->
-  <h2>Done</h2>
+  <h2>Progress</h2>
   <div>
     {% for event in events_done %}
     <div>
@@ -43,7 +43,5 @@
     <a href="{{ url_for('logout') }}">Logout</a>
   </p>
 </div>
-
-
 
 {% endblock %}

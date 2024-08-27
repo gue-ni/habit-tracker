@@ -137,7 +137,7 @@ class EventFrequency(Enum):
 class CreateEventForm(FlaskForm):
     event_name = StringField("Name", validators=[DataRequired()])
     event_emoji = StringField(
-        "Emoji", validators=[DataRequired(), Length(max=1)], default="🔥"
+        "Emoji", validators=[DataRequired(), Length(max=2)], default="🔥"
     )
     event_type = SelectField(
         "Type",
@@ -228,7 +228,18 @@ def dashboard():
 def event(id):
     event = db.get_event_by_id(event_id=id, user_id=current_user.id)
     print(event)
-    return render_template("event.html", event=event)
+
+    measurements = None
+    occurences = None
+
+    if event[2] == EventType.MEASURE.value:
+        measurements = db.get_all_measurements(event_id=id)
+        print(measurements)
+    else:
+        occurences = db.get_all_occurences_of_event(event_id=id)
+        print(occurences)
+
+    return render_template("event.html", event=event, occurences=occurences)
 
 
 @app.route("/event/new", methods=["GET", "POST"])

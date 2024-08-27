@@ -44,9 +44,7 @@ def get_user_by_id(id):
     return user
 
 
-def insert_event(
-    event_name, owner, event_type, frequency="DAILY", emoji='🔥'
-):
+def insert_event(event_name, owner, event_type, frequency="DAILY", emoji="🔥"):
     con = sqlite3.connect(database)
     cur = con.cursor()
     query = "INSERT INTO events (event_name, user_id, event_type, event_repeat, event_emoji) VALUES (?,?,?,?,?)"
@@ -67,7 +65,9 @@ def insert_event(
 def get_all_events_by_owner(user_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "SELECT id, event_name, event_type, event_emoji FROM events WHERE user_id = ?"
+    query = (
+        "SELECT id, event_name, event_type, event_emoji FROM events WHERE user_id = ?"
+    )
     cur.execute(query, (user_id,))
     result = cur.fetchall()
     con.close()
@@ -112,3 +112,29 @@ def insert_measurement_of_event(event_id, value):
     )
     con.commit()
     con.close()
+
+
+def get_all_occurences_of_event(event_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    query = "SELECT id, occured_at FROM occurences WHERE event_id = ?"
+    cur.execute(
+        query,
+        (event_id,),
+    )
+    result = cur.fetchall()
+    con.close()
+    return result
+
+
+def get_all_measurements(event_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    query = "SELECT occured_at, numeric_value FROM occurences WHERE event_id = ? AND numeric_value NOT NULL"
+    cur.execute(
+        query,
+        (event_id,),
+    )
+    result = cur.fetchall()
+    con.close()
+    return result
