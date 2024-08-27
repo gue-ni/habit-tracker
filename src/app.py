@@ -45,7 +45,7 @@ login_manager.login_view = "login"
 
 class User(UserMixin):
     def __init__(self, id, name):
-        self.id = id
+        self.id = str(id)
         self.name = name
         self.authenticated = False
 
@@ -62,7 +62,7 @@ class User(UserMixin):
         return True
 
     def get_id(self):
-        return self.id
+        return str(self.id)
 
 
 @login_manager.user_loader
@@ -72,7 +72,7 @@ def load_user(user_id):
         return None
     else:
         (id, name, hash) = user
-        return User(int(id), name)
+        return User(str(id), name)
 
 
 # @login_manager.request_loader
