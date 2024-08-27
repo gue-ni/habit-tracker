@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS events (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   user_id INTEGER,
   description TEXT,
+  hex_color TEXT DEFAULT '#FF5733',
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 

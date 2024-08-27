@@ -9,16 +9,10 @@
 </div>
 
 
-<div class="w-full bg-white rounded-2xl p-6 mt-4">
-  <h1 class="text-2xl font-bold">
-    Hi {{ user.name }}! How are you today?
-  </h1>
-</div>
-
 <div>
   <a href="{{ url_for('new_event') }}" class="">
     <div
-      class="w-full bg-white rounded-2xl p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500 active:text-white">
+      class="w-full bg-white rounded-lg p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500 active:text-white">
       Create New Habit
     </div>
   </a>
@@ -27,8 +21,8 @@
 
 
 <div class="w-full py-6">
-  <h2 class="text-1xl font-bold">
-    TODO
+  <h2 class="text-2xl font-bold">
+    To Do
   </h2>
 </div>
 
@@ -40,8 +34,8 @@
     {% for event in events_todo %}
     <div>
       <a href="{{ url_for('record_event', id=event[0]) }}" class="">
-        <div class="w-full bg-white rounded-2xl p-3 mt-2 text-l ">
-          {{ event[3] }} {{ event[1] }}  streak:
+        <div class="w-full bg-white rounded-lg p-3 mt-2 text-l ">
+          {{ event[3] }} {{ event[1] }} streak:   X expires: Y
         </div>
       </a>
     </div>
@@ -52,7 +46,7 @@
 
 <div class="w-full py-6">
   <h2 class="text-1xl font-bold">
-   Progress
+    Progress
   </h2>
 </div>
 
@@ -72,6 +66,8 @@
     {% endfor %}
   </div>
 </div>
+
+
 
 
 <div>

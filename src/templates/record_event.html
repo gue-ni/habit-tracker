@@ -3,11 +3,27 @@
 {% block content %}
 <div>
 
+<div class="w-full py-6">
+  <a href="{{ url_for('dashboard') }}">
+  <h1 class="text-2xl font-bold">
+    Habits
+  </h1>
+
+  </a>
+</div>
+
   <div class="py-6">
     <h1 class="text-2xl font-bold">
       {{ event[3] }} {{ event[1] }}
     </h1>
   </div>
+
+<div class="w-full bg-white rounded-2xl p-6 mt-4">
+  <p>
+    {{ event }}
+  </p>
+</div>
+
 
   <div>
     <form action="{{ url_for('record_event', id=event[0] )}}" method="post">
