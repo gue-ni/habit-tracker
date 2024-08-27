@@ -1,6 +1,6 @@
 import sqlite3
 
-database = "/home/pi/clock-in/db/database.sqlite"
+database = "./db/database.sqlite"
 
 
 def insert_user(username, password):
