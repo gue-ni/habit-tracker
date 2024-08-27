@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   event_name TEXT NOT NULL,
   event_tag TEXT NOT NULL,
-  event_type TEXT CHECK(event_type IN ('NUMERIC', 'OCCURENCE') ) NOT NULL DEFAULT 'OCCURENCE',
+  event_type TEXT CHECK(event_type IN ('NUMERIC', 'OCCURENCE')) NOT NULL DEFAULT 'OCCURENCE',
+  event_freq TEXT CHECK(event_freq IN ('DAILY', 'WEEKLY')) NOT NULL DEFAULT 'DAILY',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   user_id INTEGER,
   description TEXT,
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS occurences (
   event_id INTEGER,
   occured_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   comment TEXT,
+  numeric_value FLOAT,
   FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
 );
 
