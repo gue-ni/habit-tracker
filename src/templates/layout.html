@@ -18,14 +18,18 @@
   {% endblock %}
 </head>
 
-<body>
-  <div>{% block content %}{% endblock %}</div>
-  <div>
-    <small>
-      {% block footer %}
-      &copy; Copyright 2024 Jakob Maier.
-      {% endblock %}
-    </small>
+<body class="bg-gray-100 ">
+  <div class="w-full max-w-md mx-auto px-4 py-4">
+    <div>
+      {% block content %}{% endblock %}
+    </div>
+    <div>
+      <small>
+        {% block footer %}
+        Copyright &copy; 2024 Jakob Maier.
+        {% endblock %}
+      </small>
+    </div>
   </div>
 </body>
 

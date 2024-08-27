@@ -1,35 +1,69 @@
 {% extends "layout.html" %}
 {% block title %}Habit Tracker{% endblock %}
 {% block content %}
-<h1>
-  Hi {{ user.name }}! How are you today?
-</h1>
+
+<div class="w-full py-6">
+  <h1 class="text-2xl font-bold">
+    Habits
+  </h1>
+</div>
+
+
+<div class="w-full bg-white rounded-2xl p-6 mt-4">
+  <h1 class="text-2xl font-bold">
+    Hi {{ user.name }}! How are you today?
+  </h1>
+</div>
 
 <div>
-  <p>
-    <a href="{{ url_for('new_event') }}">Create Habit</a>
-  </p>
+  <a href="{{ url_for('new_event') }}" class="">
+    <div
+      class="w-full bg-white rounded-2xl p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500 active:text-white">
+      Create New Habit
+    </div>
+  </a>
 </div>
-<div>
+
+
+
+<div class="w-full py-6">
+  <h2 class="text-1xl font-bold">
+    TODO
+  </h2>
+</div>
+
+<div class="w-full">
   <!--
   The events that need to be done today, sorted by which event expires first
   -->
-  <h2>To Do</h2>
   <div>
     {% for event in events_todo %}
     <div>
-      <a href="{{ url_for('record_event', id=event[0]) }}">{{ event[1] }}</a>
+      <a href="{{ url_for('record_event', id=event[0]) }}" class="">
+        <div class="w-full bg-white rounded-2xl p-3 mt-2 text-l ">
+          {{ event[3] }} {{ event[1] }}  streak:
+        </div>
+      </a>
     </div>
+
     {% endfor %}
   </div>
 </div>
+
+<div class="w-full py-6">
+  <h2 class="text-1xl font-bold">
+   Progress
+  </h2>
+</div>
+
+
+
 <div>
   <!--
   The events that have been done
   This is a grid, where the columns are the days of the week
   and the rows are the events, with an emoji and the name on the left
   -->
-  <h2>Progress</h2>
   <div>
     {% for event in events_done %}
     <div>
@@ -38,10 +72,15 @@
     {% endfor %}
   </div>
 </div>
+
+
 <div>
-  <p>
-    <a href="{{ url_for('logout') }}">Logout</a>
-  </p>
+  <a href="{{ url_for('logout') }}" class="">
+    <div
+      class="w-full bg-white rounded-2xl p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500 active:text-white">
+      Logout
+    </div>
+  </a>
 </div>
 
 {% endblock %}

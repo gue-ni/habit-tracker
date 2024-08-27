@@ -149,7 +149,7 @@ class CreateEventForm(FlaskForm):
         choices=[(e.name, e.value) for e in EventFrequency],
         validators=[DataRequired()],
     )
-    submit = SubmitField("Create Event")
+    submit = SubmitField("Create")
 
 
 class RecordEventForm(FlaskForm):
