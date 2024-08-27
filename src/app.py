@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, session, request
+from flask import Flask, render_template, redirect, url_for, flash, session, request, Blueprint
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo
@@ -121,6 +121,11 @@ class CreateEventForm(FlaskForm):
     submit = SubmitField("Create Event")
 
 
+class RecordEventForm(FlaskForm):
+    numeric_value = SelectField("Numeric Value")
+    submit = SubmitField("Done")
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -191,6 +196,11 @@ def create_new_event():
     form = CreateEventForm()
     return render_template("create_new_event.html", form=form)
 
+@app.route("/record_event/<id>")
+@login_required
+def record_event(id):
+    event = db.get_event_by_id(event_id=id, owner=current_user.id)
+    return render_template("record_event.html", event=event)
 
 @app.route("/create_event", methods=["POST"])
 @login_required
