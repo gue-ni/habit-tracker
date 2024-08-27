@@ -1,10 +1,22 @@
 {% extends "layout.html" %}
 {% block title %}Record Event{% endblock %}
 {% block content %}
-<h1>Record Event: {{ event[1] }}</h1>
+<h1>{{ event[3] }} {{ event[1] }}</h1>
+<p>
+  Good Job!
+</p>
 <div>
-  <form action="" method="post">
-    <button type="submit">DONE</button>
+  <form action="{{ url_for('record_event', id=event[0] )}}" method="post">
+    {{ form.hidden_tag() }}
+
+    {% if event[2] == "MEASURE" %}
+    <div>
+      {{ form.numeric_value.label }}<br>
+      {{ form.numeric_value() }}<br>
+    </div>
+    {% endif %}
+
+    <button type="submit">done for today</button>
   </form>
 </div>
 {% endblock %}

@@ -45,19 +45,19 @@ def get_user_by_id(id):
 
 
 def insert_event(
-    event_name, event_tag, owner, event_type, frequency="DAILY", description=None
+    event_name, owner, event_type, frequency="DAILY", emoji='🔥'
 ):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "INSERT INTO events (event_name, event_tag, user_id, event_type, event_freq) VALUES (?,?,?,?,?)"
+    query = "INSERT INTO events (event_name, user_id, event_type, event_repeat, event_emoji) VALUES (?,?,?,?,?)"
     cur.execute(
         query,
         (
             event_name,
-            event_tag,
             owner,
             event_type,
             frequency,
+            emoji,
         ),
     )
     con.commit()
@@ -67,7 +67,7 @@ def insert_event(
 def get_all_events_by_owner(user_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "SELECT id, event_name, event_tag, event_type FROM events WHERE user_id = ?"
+    query = "SELECT id, event_name, event_type, event_emoji FROM events WHERE user_id = ?"
     cur.execute(query, (user_id,))
     result = cur.fetchall()
     con.close()
@@ -77,7 +77,7 @@ def get_all_events_by_owner(user_id):
 def get_event_by_id(user_id, event_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "SELECT id, event_name, event_tag, event_type FROM events WHERE user_id = ? AND id = ?"
+    query = "SELECT id, event_name, event_type, event_emoji FROM events WHERE user_id = ? AND id = ?"
     cur.execute(
         query,
         (
@@ -102,7 +102,7 @@ def insert_occurence_of_event(event_id):
 def insert_measurement_of_event(event_id, value):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "INSERT INTO measurements (event_id, value) VALUES (?,?)"
+    query = "INSERT INTO occurences (event_id, numeric_value) VALUES (?,?)"
     cur.execute(
         query,
         (

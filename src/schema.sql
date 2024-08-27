@@ -9,9 +9,10 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   event_name TEXT NOT NULL,
-  event_tag TEXT NOT NULL,
-  event_type TEXT CHECK(event_type IN ('NUMERIC', 'OCCURENCE')) NOT NULL DEFAULT 'OCCURENCE',
-  event_freq TEXT CHECK(event_freq IN ('DAILY', 'WEEKLY')) NOT NULL DEFAULT 'DAILY',
+  event_tag TEXT,
+  event_type TEXT CHECK(event_type IN ('HABIT', 'QUIT', 'MEASURE')) NOT NULL DEFAULT 'HABIT',
+  event_repeat TEXT CHECK(event_repeat IN ('DAILY', 'WEEKLY')) NOT NULL DEFAULT 'DAILY',
+  event_emoji TEXT CHECK(length(event_emoji) = 1),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   user_id INTEGER,
   description TEXT,

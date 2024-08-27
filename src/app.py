@@ -9,7 +9,14 @@ from flask import (
     Blueprint,
 )
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from wtforms import (
+    StringField,
+    PasswordField,
+    SubmitField,
+    BooleanField,
+    SelectField,
+    DecimalField,
+)
 from wtforms.validators import DataRequired, Length, EqualTo
 from flask_login import (
     LoginManager,
@@ -115,8 +122,9 @@ class SignupForm(FlaskForm):
 
 
 class EventType(Enum):
-    OCCURENCE = "OCCURENCE"
-    NUMERIC = "NUMERIC"
+    HABIT = "HABIT"
+    QUIT = "QUIT"
+    MEASURE = "MEASURE"
 
 
 class EventFrequency(Enum):
@@ -127,15 +135,17 @@ class EventFrequency(Enum):
 
 
 class CreateEventForm(FlaskForm):
-    event_name = StringField("Event Name", validators=[DataRequired()])
-    event_tag = StringField("Event Tag", validators=[DataRequired()])
+    event_name = StringField("Name", validators=[DataRequired()])
+    event_emoji = StringField(
+        "Emoji", validators=[DataRequired(), Length(max=1)], default="🔥"
+    )
     event_type = SelectField(
-        "Event Type",
+        "Type",
         choices=[(e.name, e.value) for e in EventType],
         validators=[DataRequired()],
     )
-    event_freq = SelectField(
-        "Event Frequency",
+    event_repeat = SelectField(
+        "Repeat",
         choices=[(e.name, e.value) for e in EventFrequency],
         validators=[DataRequired()],
     )
@@ -143,7 +153,7 @@ class CreateEventForm(FlaskForm):
 
 
 class RecordEventForm(FlaskForm):
-    numeric_value = SelectField("Numeric Value")
+    numeric_value = DecimalField("Numeric Value")
     submit = SubmitField("Done")
 
 
@@ -208,7 +218,10 @@ def logout():
 @login_required
 def dashboard():
     events = db.get_all_events_by_owner(current_user.id)
-    return render_template("dashboard.html", user=current_user, events=events)
+    print(events)
+    return render_template(
+        "dashboard.html", user=current_user, events_todo=events, events_done=events
+    )
 
 
 @app.route("/event/<int:id>", methods=["GET"])
@@ -225,13 +238,14 @@ def new_event():
 
     if request.method == "POST":
         event_name = form.event_name.data
-        event_tag = form.event_tag.data
         event_type = form.event_type.data
+        event_emoji = form.event_emoji.data
+        print(event_name, event_type, event_emoji)
         db.insert_event(
             event_name=event_name,
-            event_tag=event_tag,
             owner=current_user.id,
             event_type=event_type,
+            emoji=event_emoji,
         )
         return redirect(url_for("dashboard"))
 
@@ -242,27 +256,20 @@ def new_event():
 @app.route("/event/<int:id>/record", methods=["GET", "POST"])
 @login_required
 def record_event(id):
+    form = RecordEventForm()
     if request.method == "POST":
-        db.insert_occurence_of_event(event_id=id)
+        numeric_value = form.numeric_value.data
+        print(numeric_value)
+        if numeric_value:
+            numeric_value = float(numeric_value)
+            db.insert_measurement_of_event(event_id=id, value=numeric_value)
+        else:
+            db.insert_occurence_of_event(event_id=id)
         return redirect(url_for("dashboard"))
     else:
         event = db.get_event_by_id(event_id=id, user_id=current_user.id)
         print(event)
-        return render_template("record_event.html", event=event)
-
-
-@app.route("/create_measurement", methods=["GET", "POST"])
-@login_required
-def create_measurement():
-    if request.method == "POST":
-        id = request.args.get("id")
-        data = request.get_json()
-        value = data.get("value")
-        if value:
-            db.insert_measurement_of_event(event_id=id, value=value)
-        return redirect(url_for("dashboard"))
-    else:
-        return "test"
+        return render_template("record_event.html", event=event, form=form)
 
 
 @app.route("/")
