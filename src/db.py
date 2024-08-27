@@ -64,6 +64,15 @@ def get_all_events_by_owner(user_id):
     con.close()
     return result
 
+def get_event_by_id(user_id, event_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    query = "SELECT id, event_name, event_tag, event_type FROM events WHERE user_id = ? AND id = ?"
+    cur.execute(query, (user_id, event_id, ))
+    result = cur.fetchone()
+    con.close()
+    return result
+
 
 def insert_occurence_of_event(event_id):
     con = sqlite3.connect(database)

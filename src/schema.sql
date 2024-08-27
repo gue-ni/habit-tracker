@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS occurences (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   event_id INTEGER,
   occured_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  description TEXT,
+  comment TEXT,
   FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
 );
 
