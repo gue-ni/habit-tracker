@@ -3,46 +3,52 @@
 {% block content %}
 <div>
 
-<div class="w-full py-6">
-  <a href="{{ url_for('dashboard') }}">
-  <h1 class="text-2xl font-bold">
-    Habits
-  </h1>
-
-  </a>
-</div>
-
-  <div class="py-6">
-    <h1 class="text-2xl font-bold">
-      {{ event[3] }} {{ event[1] }}
-    </h1>
+  <div class="border-y border-slate-900/10">
+    <div class="bg-white py-4 px-6 flex items-center relative">
+      <a href="{{ url_for('dashboard') }}" class="absolute left-6 text-white hover:text-gray-200 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="black">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </a>
+      <h1 class="text-2xl font-semibold mx-auto text-slate-700">Record Habit</h1>
+    </div>
   </div>
 
-<div class="w-full bg-white rounded-2xl p-6 mt-4">
-  <p>
-    {{ event }}
-  </p>
-</div>
+  <div class="p-6 font-semibold text-slate-700">
 
 
-  <div>
-    <form action="{{ url_for('record_event', id=event[0] )}}" method="post">
-      {{ form.hidden_tag() }}
+    <div class=" w-full py-6 center-text">
+      <h1 class="text-2xl font-bold ">
+        {{ event[3] }} {{ event[1] }}
+      </h1>
+    </div>
 
-      {% if event[2] == "MEASURE" %}
-      <div>
-        {{ form.numeric_value.label }}<br>
-        {{ form.numeric_value() }}<br>
-      </div>
-      {% endif %}
+    <div class="w-full bg-white rounded-2xl p-6 mt-4">
+      <p>
+        {{ event }}
+      </p>
+    </div>
 
 
-      <div>
-        {{ form.submit(class_="w-full bg-white rounded-2xl p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500
-        active:text-white") }}
-      </div>
+    <div>
+      <form action="{{ url_for('record_event', id=event[0] )}}" method="post">
+        {{ form.hidden_tag() }}
 
-    </form>
+        {% if event[2] == "MEASURE" %}
+        <div>
+          {{ form.numeric_value.label }}<br>
+          {{ form.numeric_value() }}<br>
+        </div>
+        {% endif %}
+
+
+        <div>
+          {{ form.submit(class_="w-full bg-white rounded-2xl p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500
+          active:text-white") }}
+        </div>
+
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}

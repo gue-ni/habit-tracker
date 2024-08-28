@@ -2,8 +2,6 @@
 {% block title %}Create New Event{% endblock %}
 {% block content %}
 <div>
-
-
   <div class="border-y border-slate-900/10">
     <div class="bg-white py-4 px-6 flex items-center relative">
       <a href="{{ url_for('dashboard') }}" class="absolute left-6 text-white hover:text-gray-200 flex items-center">
@@ -11,49 +9,37 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </a>
-      <h1 class="text-2xl font-semibold mx-auto text-slate-700">Habits</h1>
+      <h1 class="text-2xl font-semibold mx-auto text-slate-700">Create New Habit</h1>
     </div>
   </div>
 
 
 
-
-
-
-
-  <form method="POST" action="{{ url_for('new_event') }}" class="p-2">
-    {{ form.hidden_tag() }}
-
-    <div>
-      {{ form.event_name.label }}<br>
-      {{ form.event_name(size=32) }}<br>
-    </div>
-
-    <div>
-      {{ form.event_emoji.label }}<br>
-      {{ form.event_emoji() }}<br>
-    </div>
-
-    <div>
-      {{ form.event_type.label }}<br>
-      {{ form.event_type() }}<br>
-    </div>
-
-    <div>
-      {{ form.event_repeat.label }}<br>
-      {{ form.event_repeat() }}<br>
-    </div>
-
-
-
-    <div>
-      {{ form.submit(class_="w-full bg-white rounded-2xl p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500
-      active:text-white") }}
-    </div>
-
-
-
-  </form>
+  <div class="p-6 font-semibold text-slate-700">
+    <form method="POST" action="{{ url_for('new_event') }}" class="p-2">
+      {{ form.hidden_tag() }}
+      <div>
+        {{ form.event_name.label }}<br>
+        {{ form.event_name(size=32) }}<br>
+      </div>
+      <div>
+        {{ form.event_emoji.label }}<br>
+        {{ form.event_emoji() }}<br>
+      </div>
+      <div>
+        {{ form.event_type.label }}<br>
+        {{ form.event_type() }}<br>
+      </div>
+      <div>
+        {{ form.event_repeat.label }}<br>
+        {{ form.event_repeat() }}<br>
+      </div>
+      <div>
+        {{ form.submit(class_="w-full bg-white rounded-2xl p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500
+        active:text-white") }}
+      </div>
+    </form>
+  </div>
 </div>
 
 
