@@ -4,25 +4,24 @@
 <div>
 
 
-  <div>
-    <a href="{{ url_for('dashboard') }}" class="">
-      <div class="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-lg
-    hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-    </a>
+  <div class="border-y border-slate-900/10">
+    <div class="bg-white py-4 px-6 flex items-center relative">
+      <a href="{{ url_for('dashboard') }}" class="absolute left-6 text-white hover:text-gray-200 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="black">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </a>
+      <h1 class="text-2xl font-semibold mx-auto text-slate-700">Habits</h1>
+    </div>
   </div>
 
 
 
-  <div class="py-6">
-    <h1 class="text-2xl font-bold">
-      Create New Habit
-    </h1>
-  </div>
 
 
 
-  <form method="POST" action="{{ url_for('new_event') }}">
+
+  <form method="POST" action="{{ url_for('new_event') }}" class="p-2">
     {{ form.hidden_tag() }}
 
     <div>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html class="h-screen">
 
 <head>
   {% block head %}
@@ -18,12 +18,12 @@
   {% endblock %}
 </head>
 
-<body class="bg-gray-100 ">
-  <div class="w-full max-w-md mx-auto px-4 py-4">
+<body class="bg-slate-100 h-screen">
+  <div class="w-full max-w-md mx-auto border-x border-slate-900/10 h-full">
     <div>
       {% block content %}{% endblock %}
     </div>
-    <div class="w-full text-center p-2">
+    <div class="w-full text-center font-semibold">
       <small>
         {% block footer %}
         Copyright &copy; 2024 Jakob Maier.

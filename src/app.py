@@ -35,12 +35,13 @@ import db
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET", "your_secret_key_here")
-app.config["REMEMBER_COOKIE_DURATION"] = datetime.timedelta(days=356)
+# app.config["REMEMBER_COOKIE_DURATION"] = datetime.timedelta(days=356)
 
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
+# login_manager.session_protection = None
 
 
 class User(UserMixin):
@@ -68,37 +69,12 @@ class User(UserMixin):
 @login_manager.user_loader
 def load_user(user_id):
     user = db.get_user_by_id(user_id)
+    print(f"load user {user_id}, {user}")
     if not user:
         return None
     else:
         (id, name, hash) = user
         return User(str(id), name)
-
-
-# @login_manager.request_loader
-# def load_user_from_request(request):
-#
-#    # first, try to login using the api_key url arg
-#    api_key = request.args.get('api_key')
-#    if api_key:
-#        user = User.query.filter_by(api_key=api_key).first()
-#        if user:
-#            return user
-#
-#    # next, try to login using Basic Auth
-#    api_key = request.headers.get('Authorization')
-#    if api_key:
-#        api_key = api_key.replace('Basic ', '', 1)
-#        try:
-#            api_key = base64.b64decode(api_key)
-#        except TypeError:
-#            pass
-#        user = User.query.filter_by(api_key=api_key).first()
-#        if user:
-#            return user
-#
-#    # finally, return None if both methods did not login the user
-#    return None
 
 
 class LoginForm(FlaskForm):
@@ -175,7 +151,7 @@ def login():
             if bcrypt.checkpw(password.encode("utf-8"), hashed_password):
                 new_user = User(id=id, name=name)
                 remember_me = form.remember_me.data
-                login_user(new_user, remember=remember_me)
+                login_user(new_user, remember=True)
                 flash("Logged in successfully.", "success")
                 return redirect(url_for("dashboard"))
             else:
@@ -208,8 +184,9 @@ def signup():
 @app.route("/logout")
 @login_required
 def logout():
+    print(f"logout {current_user}")
     logout_user()
-    session.clear()
+    #session.clear()
     flash("You have been logged out.", "info")
     return redirect(url_for("login"))
 
