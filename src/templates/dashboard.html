@@ -14,7 +14,7 @@
 
   <div class="py-2">
     <a href="{{ url_for('new_event') }}" class="">
-      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10">
+      <div class="bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10">
         Create New Habit
       </div>
     </a>
@@ -26,13 +26,13 @@
     </h2>
   </div>
 
-  <div class="py-4">
+  <div class="">
     <div>
       {% for event in events_todo %}
       <div class="pb-4">
         <a href="{{ url_for('record_event', id=event[0]) }}" class="">
-          <div class="p-4 w-full bg-white rounded-lg border border-slate-900/10 text-center ">
-            {{ event[3] }} {{ event[1] }} streak: X expires: Y
+          <div class="p-4 w-full bg-white rounded-lg border border-slate-900/10">
+            {{ event[3] }} {{ event[1] }}
           </div>
         </a>
       </div>
@@ -40,20 +40,20 @@
     </div>
   </div>
 
-  <div class="w-full py-6">
-    <h2 class="text-1xl font-bold">
+  <div class="py-4">
+    <h2 class="text-2xl">
       Progress
     </h2>
   </div>
 
-
-  <div>
-    <!--
+  <!--
   The events that have been done
   This is a grid, where the columns are the days of the week
   and the rows are the events, with an emoji and the name on the left
   -->
-    <div>
+
+  <div class="py-4">
+    <div class="bg-white p-4 rounded-lg border border-slate-900/10">
       {% for event in events_done %}
       <div>
         <a href="{{ url_for('event', id=event[0]) }}">{{ event[3] }}{{ event[1] }}</a>
@@ -62,10 +62,9 @@
     </div>
   </div>
 
-  <div>
+  <div class="py-2">
     <a href="{{ url_for('logout') }}" class="">
-      <div
-        class="w-full bg-white rounded-2xl p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500 active:text-white">
+      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10">
         Logout
       </div>
     </a>
