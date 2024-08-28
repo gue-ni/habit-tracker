@@ -41,7 +41,6 @@ app.config["SECRET_KEY"] = os.getenv("SECRET", "your_secret_key_here")
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
-# login_manager.session_protection = None
 
 
 class User(UserMixin):
@@ -186,7 +185,7 @@ def signup():
 def logout():
     print(f"logout {current_user}")
     logout_user()
-    #session.clear()
+    # session.clear()
     flash("You have been logged out.", "info")
     return redirect(url_for("login"))
 
@@ -265,6 +264,7 @@ def index():
     if current_user.is_authenticated:
         return redirect(url_for("dashboard"))
     return render_template("index.html")
+
 
 @app.route("/about")
 def about():
