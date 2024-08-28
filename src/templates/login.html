@@ -7,6 +7,13 @@
   </div>
 </div>
 <div class="p-6 font-semibold text-slate-700">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="flash-{{ category }}">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
   <form method="POST" action="{{ url_for('login') }}">
     {{ form.hidden_tag() }}
     <div class="py-4">
@@ -28,19 +35,10 @@
       {{ form.remember_me(class_="p-4 rounded-lg border border-slate-900/10",) }}
     </div>
     <div class="py-4">
-      {{ form.submit(class_="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10") }}
+      {{ form.submit(class_="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10")
+      }}
     </div>
   </form>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for category, message in messages %}
-  <div class="flash-{{ category }}">{{ message }}</div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-  <div>
-
-  </div>
   <div class="py-2">
     <p>
       No account yet?
