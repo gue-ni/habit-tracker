@@ -9,34 +9,36 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </a>
-      <h1 class="text-2xl font-semibold mx-auto text-slate-700">{{ event[3] }} {{ event[1] }}</h1>
+      <h1 class="text-2xl font-semibold mx-auto text-slate-700">Record: {{ event[3] }} {{ event[1] }}</h1>
     </div>
   </div>
   <div class="p-6 font-semibold text-slate-700">
-    <div class=" w-full py-6 center-text">
-      <h1 class="text-2xl font-bold ">
-        {{ event[3] }} {{ event[1] }}
-      </h1>
-    </div>
     <div class="w-full bg-white rounded-2xl p-6 mt-4">
+      <h2>Description</h2>
       <p>
-        {{ event }}
       </p>
     </div>
-    <div>
+    <div class="py-4">
       <form action="{{ url_for('record_event', id=event[0] )}}" method="post">
         {{ form.hidden_tag() }}
         {% if event[2] == "MEASURE" %}
-        <div>
+        <div class="py-4">
           {{ form.numeric_value.label }}<br>
-          {{ form.numeric_value() }}<br>
+          {{ form.numeric_value(class_="w-full p-4 rounded-lg border border-slate-900/10 text-center") }}<br>
         </div>
         {% endif %}
-        <div>
-          {{ form.submit(class_="w-full bg-white rounded-2xl p-6 text-1xl font-bold text-center mt-4 active:bg-gray-500
-          active:text-white") }}
+        <div class="py-4">
+          {{ form.submit(class_="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border
+          border-slate-900/10") }}
         </div>
       </form>
+    </div>
+    <div class="py-4">
+      <a href="{{ url_for('event', id=event[0]) }}" class="">
+        <div class="p-4  w-full bg-white text-center text-slate-900 rounded-lg border border-slate-900/10">
+          Show Statistics
+        </div>
+      </a>
     </div>
   </div>
 </div>

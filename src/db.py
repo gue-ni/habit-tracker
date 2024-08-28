@@ -44,19 +44,32 @@ def get_user_by_id(id):
     return user
 
 
-def insert_event(event_name, owner, event_type, frequency="DAILY", emoji="🔥"):
+def insert_event(
+    event_name,
+    owner,
+    event_type,
+    event_repeat,
+    event_emoji,
+    event_color,
+):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "INSERT INTO events (event_name, user_id, event_type, event_repeat, event_emoji) VALUES (?,?,?,?,?)"
+    query = "INSERT INTO events (event_name, user_id, event_type, event_repeat, event_emoji, hex_color) VALUES (?,?,?,?,?,?)"
     cur.execute(
         query,
-        (
-            event_name,
-            owner,
-            event_type,
-            frequency,
-            emoji,
-        ),
+        (event_name, owner, event_type, event_repeat, event_emoji, event_color),
+    )
+    con.commit()
+    con.close()
+
+
+def delete_event(event_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    query = "DELETE FROM events WHERE id = ?"
+    cur.execute(
+        query,
+        (event_id,),
     )
     con.commit()
     con.close()
@@ -65,9 +78,7 @@ def insert_event(event_name, owner, event_type, frequency="DAILY", emoji="🔥")
 def get_all_events_by_owner(user_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = (
-        "SELECT id, event_name, event_type, event_emoji FROM events WHERE user_id = ?"
-    )
+    query = "SELECT id, event_name, event_type, event_emoji, description, event_repeat, hex_color FROM events WHERE user_id = ?"
     cur.execute(query, (user_id,))
     result = cur.fetchall()
     con.close()
@@ -77,7 +88,7 @@ def get_all_events_by_owner(user_id):
 def get_event_by_id(user_id, event_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "SELECT id, event_name, event_type, event_emoji FROM events WHERE user_id = ? AND id = ?"
+    query = "SELECT id, event_name, event_type, event_emoji, description, event_repeat, hex_color FROM events WHERE user_id = ? AND id = ?"
     cur.execute(
         query,
         (

@@ -30,6 +30,7 @@ import bcrypt
 import datetime
 from enum import Enum
 import os
+import random
 
 import db
 
@@ -68,7 +69,6 @@ class User(UserMixin):
 @login_manager.user_loader
 def load_user(user_id):
     user = db.get_user_by_id(user_id)
-    print(f"load user {user_id}, {user}")
     if not user:
         return None
     else:
@@ -227,13 +227,20 @@ def new_event():
         event_name = form.event_name.data
         event_type = form.event_type.data
         event_emoji = form.event_emoji.data
-        print(event_name, event_type, event_emoji)
+        event_repeat = form.event_repeat.data
+
+        colors = ["#ff00ff", "#ff0000", "#003366", "#4B0082"]
+        hex_color = random.choice(colors)
+
         db.insert_event(
             event_name=event_name,
             owner=current_user.id,
             event_type=event_type,
-            emoji=event_emoji,
+            event_repeat=event_repeat,
+            event_emoji=event_emoji,
+            event_color=hex_color,
         )
+
         return redirect(url_for("dashboard"))
 
     else:
@@ -257,6 +264,13 @@ def record_event(id):
         event = db.get_event_by_id(event_id=id, user_id=current_user.id)
         print(event)
         return render_template("record_event.html", event=event, form=form)
+
+@app.route("/event/<int:id>/delete", methods=["POST"])
+@login_required
+def delete_event(id):
+    print(f"delete {id}")
+    db.delete_event(id)
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/")
