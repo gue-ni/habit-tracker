@@ -74,6 +74,8 @@ def delete_event(event_id):
     con.commit()
     con.close()
 
+def get_todo_events(user_id):
+    query = "select * from events where (event_repeat = 'DAILY' and latest_occurence )"
 
 def get_all_events_by_owner(user_id):
     con = sqlite3.connect(database)
