@@ -1,16 +1,29 @@
 {% extends "layout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<h1>ClockIn</h1>
-<div>
-  <p>
-    Welcome on my awesome website.
-  </p>
-  <p>
-    <a href="{{ url_for('login') }}">Login</a>
-  </p>
-  <p>
-    <a href="{{ url_for('signup') }}">Signup</a>
-  </p>
+<div class="border-y border-slate-900/10">
+  <div class="bg-white py-4 px-6 flex items-center relative">
+    <h1 class="text-2xl font-semibold mx-auto text-slate-700">Habits</h1>
+  </div>
+</div>
+<div class="p-6 font-semibold text-slate-700">
+  <div class="py-4 text-center text-2xl text-bold">
+    <p class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus posuere finibus luctus. Praesent in
+      imperdiet purus. Fusce egestas nunc in nulla rhoncus, ac posuere arcu blandit.</p>
+  </div>
+  <div class="py-2">
+    <a href="{{ url_for('login') }}" class="">
+      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10">
+        Login
+      </div>
+    </a>
+  </div>
+  <div class="py-2">
+    <a href="{{ url_for('signup') }}" class="">
+      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10">
+        Signup
+      </div>
+    </a>
+  </div>
 </div>
 {% endblock %}
