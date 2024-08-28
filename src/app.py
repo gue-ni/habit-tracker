@@ -35,7 +35,7 @@ import random
 import db
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "this has to be changed")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "change-this")
 # app.config["REMEMBER_COOKIE_DURATION"] = datetime.timedelta(days=356)
 
 

@@ -6,3 +6,5 @@ services:
     stop_signal: SIGINT
     ports:
       - '8080:5000'
+    env_file:
+      - .env
