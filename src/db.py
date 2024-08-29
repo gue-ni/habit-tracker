@@ -75,7 +75,7 @@ def delete_event(event_id):
     con.close()
 
 def get_todo_events(user_id):
-    query = "select * from events where (event_repeat = 'DAILY' and latest_occurence )"
+    query = "select e.event_name, o.occured_at from events e left join occurences o on e.id = o.event_id and date(o.occured_at) = CURRENT_DATE where o.occured_at is null;"
 
 def get_all_events_by_owner(user_id):
     con = sqlite3.connect(database)
