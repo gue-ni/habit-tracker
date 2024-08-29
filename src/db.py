@@ -77,6 +77,9 @@ def delete_event(event_id):
 def get_todo_events(user_id):
     query = "select e.event_name, o.occured_at from events e left join occurences o on e.id = o.event_id and date(o.occured_at) = CURRENT_DATE where o.occured_at is null and e.event_repeat = 'DAILY'"
 
+def get_todo_repeat_events(user_id, repeat_number):
+    query = "select sub.* from (select e.event_name, count(o.id) as cnt, o.occured_at from events e join occurences o on e.id = o.event_id where o.occured_at > DATETIME('now', '-7 day') group by e.id) as sub where sub.cnt = ?"    
+
 def get_all_events_by_owner(user_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
