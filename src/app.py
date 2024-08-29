@@ -114,6 +114,7 @@ class CreateEventForm(FlaskForm):
     event_emoji = StringField(
         "Emoji", validators=[DataRequired(), Length(max=2)], default="🔥"
     )
+    event_description = StringField("Description")
     event_type = SelectField(
         "Type",
         choices=[(e.name, e.value) for e in EventType],
@@ -228,6 +229,7 @@ def new_event():
         event_type = form.event_type.data
         event_emoji = form.event_emoji.data
         event_repeat = form.event_repeat.data
+        event_description = form.event_description.data
 
         colors = ["#ff00ff", "#ff0000", "#003366", "#4B0082"]
         hex_color = random.choice(colors)
@@ -239,6 +241,7 @@ def new_event():
             event_repeat=event_repeat,
             event_emoji=event_emoji,
             event_color=hex_color,
+            description=event_description
         )
 
         return redirect(url_for("dashboard"))
