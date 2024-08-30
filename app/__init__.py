@@ -31,6 +31,11 @@ def create_app(config_class=None):
 
     app.register_blueprint(user_bp, url_prefix="/user")
 
+    from app.event import bp as event_bp
+
+    app.register_blueprint(event_bp, url_prefix="/event")
+
+
     @app.route("/test/")
     def test_page():
         return "<h1>Testing the Flask Application Factory Pattern</h1>"
