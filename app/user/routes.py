@@ -46,7 +46,7 @@ def login():
                 remember_me = form.remember_me.data
                 login_user(new_user, remember=True)
                 flash("Logged in successfully.", "success")
-                return redirect(url_for("dashboard"))
+                return redirect(url_for("main.dashboard"))
             else:
                 flash("Invalid username or password.", "danger")
 
