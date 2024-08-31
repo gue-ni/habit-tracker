@@ -4,7 +4,7 @@
 <div>
   <div class="border-y border-slate-900/10">
     <div class="bg-white py-4 px-6 flex items-center relative">
-      <a href="{{ url_for('dashboard') }}" class="absolute left-6 text-white hover:text-gray-200 flex items-center">
+      <a href="{{ url_for('main.dashboard') }}" class="absolute left-6 text-white hover:text-gray-200 flex items-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="black">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -22,7 +22,7 @@
     </div>
     {% endif %}
     <div class="py-4">
-      <form action="{{ url_for('record_event', id=event[0] )}}" method="post">
+      <form action="{{ url_for('event.record_event', id=event[0] )}}" method="post">
         {{ form.hidden_tag() }}
         {% if event[2] == "MEASURE" %}
         <div class="py-4">
@@ -37,7 +37,7 @@
       </form>
     </div>
     <div class="py-4">
-      <a href="{{ url_for('event', id=event[0]) }}" class="">
+      <a href="{{ url_for('event.event', id=event[0]) }}" class="">
         <div class="p-4  w-full bg-white text-center text-slate-900 rounded-lg border border-slate-900/10">
           Show Statistics
         </div>

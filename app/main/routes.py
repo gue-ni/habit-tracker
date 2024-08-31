@@ -7,13 +7,25 @@ from flask_login import (
     current_user,
 )
 
+
+import app.db as db
+
+
 @bp.route("/")
 def index():
     return render_template("index.html")
 
+
+# @bp.route("/dashboard")
+# def dashboard():
+#    print(current_user.name)
+#    return render_template("index.html")
+
+
 @bp.route("/dashboard")
+@login_required
 def dashboard():
-    print(current_user.name)
-    return render_template("index.html")
-
-
+    events = db.get_all_events_by_owner(current_user.id)
+    return render_template(
+        "dashboard.html", user=current_user, events_todo=events, events_done=events
+    )

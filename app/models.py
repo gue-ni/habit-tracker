@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from . import db
 
+
 class User(UserMixin):
     def __init__(self, id, name):
         self.id = str(id)
@@ -21,4 +22,3 @@ class User(UserMixin):
 
     def get_id(self):
         return str(self.id)
-
