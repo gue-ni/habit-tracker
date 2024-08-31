@@ -11,8 +11,11 @@ CREATE TABLE IF NOT EXISTS events (
   event_name TEXT NOT NULL,
   event_tag TEXT,
   event_type TEXT CHECK(event_type IN ('HABIT', 'QUIT', 'MEASURE')) NOT NULL DEFAULT 'HABIT',
-  event_repeat TEXT CHECK(event_repeat IN ('DAILY', 'WEEKLY')) NOT NULL DEFAULT 'DAILY',
-  event_emoji TEXT CHECK(length(event_emoji) = 1),
+  event_repeat TEXT CHECK
+  (
+    event_repeat IN ('DAILY', '1_PER_WEEK', '2_PER_WEEK', '3_PER_WEEK', '4_PER_WEEK', '5_PER_WEEK')
+  ) NOT NULL DEFAULT 'DAILY',
+  event_emoji TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   user_id INTEGER,
   description TEXT,

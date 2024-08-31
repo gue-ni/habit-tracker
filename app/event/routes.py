@@ -32,15 +32,19 @@ class EventType(Enum):
 
 class EventFrequency(Enum):
     DAILY = "DAILY"
-    THRICE_PER_WEEK = "THRICE_PER_WEEK"
-    TWICE_PER_WEEK = "TWICE_PER_WEEK"
-    WEEKLY = "WEEKLY"
+    ONE_PER_WEEK = "1_PER_WEEK"
+    TWO_PER_WEEK = "2_PER_WEEK"
+    THREE_PER_WEEK = "3_PER_WEEK"
+    FOUR_PER_WEEK = "4_PER_WEEK"
+    FIVE_PER_WEEK = "5_PER_WEEK"
 
 
 class CreateEventForm(FlaskForm):
     event_name = StringField("Name", validators=[DataRequired()])
-    event_emoji = StringField(
-        "Emoji", validators=[DataRequired(), Length(max=2)], default="🔥"
+    event_emoji = SelectField(
+        "Emoji",
+        choices=["💪🏼", "🏃‍♂️", "️⚽", "🏋️‍♀️", "😴", "🛌", "🌙", "🎓", "🧠", "📚", "📖"],
+        validators=[DataRequired()],
     )
     event_description = StringField("Description")
     event_type = SelectField(
@@ -50,7 +54,7 @@ class CreateEventForm(FlaskForm):
     )
     event_repeat = SelectField(
         "Repeat",
-        choices=[(e.name, e.value) for e in EventFrequency],
+        choices=[e.value for e in EventFrequency],
         validators=[DataRequired()],
     )
     submit = SubmitField("Create")

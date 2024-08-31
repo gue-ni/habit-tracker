@@ -51,14 +51,23 @@ def insert_event(
     event_repeat,
     event_emoji,
     event_color,
-    event_description
+    event_description,
 ):
+    print(f"repeat={event_repeat}")
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "INSERT INTO events (event_name, user_id, event_type, event_repeat, event_emoji, hex_color) VALUES (?,?,?,?,?,?)"
+    query = "INSERT INTO events (event_name, user_id, event_type, event_repeat, event_emoji, hex_color, description) VALUES (?,?,?,?,?,?,?)"
     cur.execute(
         query,
-        (event_name, owner, event_type, event_repeat, event_emoji, event_color),
+        (
+            event_name,
+            owner,
+            event_type,
+            event_repeat,
+            event_emoji,
+            event_color,
+            event_description,
+        ),
     )
     con.commit()
     con.close()
@@ -75,11 +84,38 @@ def delete_event(event_id):
     con.commit()
     con.close()
 
-def get_todo_events(user_id):
-    query = "select e.event_name, o.occured_at from events e left join occurences o on e.id = o.event_id and date(o.occured_at) = CURRENT_DATE where o.occured_at is null and e.event_repeat = 'DAILY'"
+
+def get_todo_daily_events(user_id):
+    query = """
+        SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color
+        FROM events e
+        LEFT JOIN occurences o ON e.id = o.event_id and date(o.occured_at) = CURRENT_DATE
+        WHERE o.occured_at IS NULL AND e.event_repeat = 'DAILY' AND user_id = ?
+    """
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute(query, (user_id,))
+    result = cur.fetchall()
+    con.close()
+    return result
+
 
 def get_todo_repeat_events(user_id, repeat_number):
-    query = "select sub.* from (select e.event_name, count(o.id) as cnt, o.occured_at from events e join occurences o on e.id = o.event_id where o.occured_at > DATETIME('now', '-7 day') group by e.id) as sub where sub.cnt = ?"
+    query = """select sub.* from
+                (
+                    select e.event_name, count(o.id) as cnt, o.occured_at
+                    from events e join occurences o on e.id = o.event_id
+                    where o.occured_at > DATETIME('now', '-7 day') group by e.id
+                ) as sub
+                where sub.cnt = ?
+            """
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute(query, (user_id,))
+    result = cur.fetchall()
+    con.close()
+    return result
+
 
 def get_all_events_by_owner(user_id):
     con = sqlite3.connect(database)
