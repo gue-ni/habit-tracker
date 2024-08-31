@@ -14,7 +14,7 @@
   {% endfor %}
   {% endif %}
   {% endwith %}
-  <form method="POST" action="{{ url_for('login') }}">
+  <form method="POST" action="{{ url_for('user.login') }}">
     {{ form.hidden_tag() }}
     <div class="py-4">
       {{ form.username.label(class_="py-4") }}<br>
@@ -43,7 +43,7 @@
     <p>
       No account yet?
     </p>
-    <a href="{{ url_for('signup') }}" class="">
+    <a href="{{ url_for('user.signup') }}" class="">
       <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10">
         Signup
       </div>
