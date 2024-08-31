@@ -30,9 +30,13 @@ def dashboard():
     # todo
     todo = []
     todo_daily = db.get_todo_daily_events(current_user.id)
-    print(f"todo_daily={todo_daily}")
     todo += todo_daily
 
+    todo_week = db.get_todo_repeat_events(current_user.id, 3)
+    todo += todo_week
+
+    print(f"todo_daily={todo_daily}")
+    print(f"todo_week={todo_week}")
 
     return render_template(
         "dashboard.html", user=current_user, events_todo=todo, events_done=all_events

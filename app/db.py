@@ -101,17 +101,24 @@ def get_todo_daily_events(user_id):
 
 
 def get_todo_repeat_events(user_id, repeat_number):
-    query = """select sub.* from
+
+    # does not handle if no occurance exists
+    # should not be last 7 days but actually last monday
+    #                     where o.occured_at > DATETIME('now', '-7 day')
+    query = """select sub.id, sub.event_name, sub.event_repeat, sub.cnt from
                 (
-                    select e.event_name, count(o.id) as cnt, o.occured_at
-                    from events e join occurences o on e.id = o.event_id
-                    where o.occured_at > DATETIME('now', '-7 day') group by e.id
+                    select e.id, e.event_name, e.event_repeat, count(o.id) as cnt, o.occured_at
+                    from events e
+                    left join occurences o
+                    on e.id = o.event_id and o.occured_at > DATETIME('now', '-7 day')
+                    group by e.id
                 ) as sub
-                where sub.cnt = ?
+                where sub.cnt < ? and sub.event_repeat != 'DAILY'
+
             """
     con = sqlite3.connect(database)
     cur = con.cursor()
-    cur.execute(query, (user_id,))
+    cur.execute(query, (repeat_number,))
     result = cur.fetchall()
     con.close()
     return result
