@@ -101,7 +101,7 @@ def get_todo_daily_events(user_id):
     return result
 
 
-def get_todo_repeat_events(user_id, repeat_number):
+def get_todo_repeat_events(user_id):
     query = """SELECT sub.id, sub.event_name, sub.event_type, sub.event_emoji, sub.description, sub.event_repeat, sub.hex_color, sub.cnt FROM
                 (
                     SELECT

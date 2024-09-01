@@ -32,7 +32,6 @@ class EventType(Enum):
 
 class EventFrequency(Enum):
     DAILY = "DAILY"
-    WEEKLY = "WEEKLY"
     ONE_PER_WEEK = "1_PER_WEEK"
     TWO_PER_WEEK = "2_PER_WEEK"
     THREE_PER_WEEK = "3_PER_WEEK"
@@ -55,7 +54,7 @@ class CreateEventForm(FlaskForm):
     )
     event_repeat = SelectField(
         "Repeat",
-        choices=["DAILY", "WEEKLY"],
+        choices=[e.value for e in EventFrequency],
         validators=[DataRequired()],
     )
     submit = SubmitField("Create")
@@ -100,7 +99,17 @@ def new_event():
         event_repeat_per_week = None
 
         if event_repeat != "DAILY":
-            event_repeat_per_week = 3
+            event_repeat = "WEEKLY"
+            if event_repeat == EventFrequency.ONE_PER_WEEK.value:
+                event_repeat_per_week = 1
+            elif event_repeat == EventFrequency.TWO_PER_WEEK.value:
+                event_repeat_per_week = 2
+            elif event_repeat == EventFrequency.THREE_PER_WEEK.value:
+                event_repeat_per_week = 3
+            elif event_repeat == EventFrequency.FOUR_PER_WEEK.value:
+                event_repeat_per_week = 4
+            elif event_repeat == EventFrequency.FIVE_PER_WEEK.value:
+                event_repeat_per_week = 5
 
         print(event_repeat, event_repeat_per_week)
 

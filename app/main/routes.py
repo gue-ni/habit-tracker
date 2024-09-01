@@ -32,7 +32,7 @@ def dashboard():
     todo_daily = db.get_todo_daily_events(current_user.id)
     todo += todo_daily
 
-    todo_week = db.get_todo_repeat_events(current_user.id, 3)
+    todo_week = db.get_todo_repeat_events(current_user.id)
     todo += todo_week
 
     print(f"todo_daily={todo_daily}")
