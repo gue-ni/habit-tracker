@@ -52,11 +52,11 @@ def insert_event(
     event_emoji,
     event_color,
     event_description,
+    event_repeat_per_week=0,
 ):
-    print(f"repeat={event_repeat}")
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "INSERT INTO events (event_name, user_id, event_type, event_repeat, event_emoji, hex_color, description) VALUES (?,?,?,?,?,?,?)"
+    query = "INSERT INTO events (event_name, user_id, event_type, event_repeat, event_emoji, hex_color, description, event_repeat_per_week) VALUES (?,?,?,?,?,?,?,?)"
     cur.execute(
         query,
         (
@@ -67,6 +67,7 @@ def insert_event(
             event_emoji,
             event_color,
             event_description,
+            event_repeat_per_week,
         ),
     )
     con.commit()
@@ -101,24 +102,30 @@ def get_todo_daily_events(user_id):
 
 
 def get_todo_repeat_events(user_id, repeat_number):
-
-    # does not handle if no occurance exists
-    # should not be last 7 days but actually last monday
-    #                     where o.occured_at > DATETIME('now', '-7 day')
-    query = """select sub.id, sub.event_name, sub.event_repeat, sub.cnt from
+    query = """SELECT sub.id, sub.event_name, sub.event_type, sub.event_emoji, sub.description, sub.event_repeat, sub.hex_color, sub.cnt FROM
                 (
-                    select e.id, e.event_name, e.event_repeat, count(o.id) as cnt, o.occured_at
-                    from events e
-                    left join occurences o
-                    on e.id = o.event_id and o.occured_at > DATETIME('now', '-7 day')
-                    group by e.id
-                ) as sub
-                where sub.cnt < ? and sub.event_repeat != 'DAILY'
-
+                    SELECT
+                        e.id,
+                        e.event_name,
+                        e.event_type,
+                        e.event_emoji,
+                        e.description,
+                        e.event_repeat,
+                        e.hex_color,
+                        e.event_repeat_per_week,
+                        count(o.id) as cnt,
+                        o.occured_at,
+                        e.user_id
+                    FROM events e
+                    LEFT JOIN occurences o
+                    ON e.id = o.event_id AND o.occured_at > DATETIME('now', '-7 day')
+                    GROUP BY e.id
+                ) AS sub
+                WHERE sub.cnt < sub.event_repeat_per_week AND sub.event_repeat = 'WEEKLY' AND user_id = ?
             """
     con = sqlite3.connect(database)
     cur = con.cursor()
-    cur.execute(query, (repeat_number,))
+    cur.execute(query, (user_id,))
     result = cur.fetchall()
     con.close()
     return result

@@ -32,6 +32,7 @@ class EventType(Enum):
 
 class EventFrequency(Enum):
     DAILY = "DAILY"
+    WEEKLY = "WEEKLY"
     ONE_PER_WEEK = "1_PER_WEEK"
     TWO_PER_WEEK = "2_PER_WEEK"
     THREE_PER_WEEK = "3_PER_WEEK"
@@ -54,7 +55,7 @@ class CreateEventForm(FlaskForm):
     )
     event_repeat = SelectField(
         "Repeat",
-        choices=[e.value for e in EventFrequency],
+        choices=["DAILY", "WEEKLY"],
         validators=[DataRequired()],
     )
     submit = SubmitField("Create")
@@ -96,6 +97,13 @@ def new_event():
         event_repeat = form.event_repeat.data
         event_description = form.event_description.data
 
+        event_repeat_per_week = None
+
+        if event_repeat != "DAILY":
+            event_repeat_per_week = 3
+
+        print(event_repeat, event_repeat_per_week)
+
         colors = ["#ff00ff", "#ff0000", "#003366", "#4B0082"]
         hex_color = random.choice(colors)
 
@@ -107,6 +115,7 @@ def new_event():
             event_emoji=event_emoji,
             event_color=hex_color,
             event_description=event_description,
+            event_repeat_per_week=event_repeat_per_week,
         )
 
         return redirect(url_for("main.dashboard"))
