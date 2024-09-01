@@ -14,13 +14,20 @@
   </div>
   <div class="p-6 font-semibold text-slate-700">
     {% if event[4] %}
-    <div class="w-full bg-white rounded-lg border border-slate-900/10 p-6">
+    <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
       <h2>Description:</h2>
       <p>
         {{ event[4] }}
       </p>
     </div>
     {% endif %}
+    <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
+      <h2>Repeat:</h2>
+      <div class="text-center">
+        {{ event[5] }}
+      </div>
+    </div>
+
     <div class="py-4">
       <form action="{{ url_for('event.record_event', id=event[0] )}}" method="post">
         {{ form.hidden_tag() }}

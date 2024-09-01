@@ -12,14 +12,26 @@
   </div>
 </div>
 <div class="p-6 font-semibold text-slate-700">
+  {% if event[4] %}
   <div class="py-4">
-    <div class="w-full bg-white rounded-lg border border-slate-900/10 p-6">
+    <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
       <h2>Description:</h2>
       <p>
         {{ event[4] }}
       </p>
     </div>
   </div>
+  {% endif %}
+  {% if streak %}
+  <div class="py-4">
+    <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
+      <h2>Streak:</h2>
+      <div class="text-3xl text-center">
+        {{ streak[1] }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
   <div class="py-4">
     {% if event[2] == "MEASURE" %}
     <div>

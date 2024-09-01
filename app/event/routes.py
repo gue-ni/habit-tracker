@@ -71,6 +71,9 @@ def event(id):
     event = db.get_event_by_id(event_id=id, user_id=current_user.id)
     print(event)
 
+    streak = db.get_streak(event_id=id)
+    print(f"streak={streak}")
+
     measurements = None
     occurences = None
 
@@ -81,7 +84,7 @@ def event(id):
         occurences = db.get_all_occurences_of_event(event_id=id)
         print(occurences)
 
-    return render_template("event.html", event=event, occurences=occurences)
+    return render_template("event.html", event=event, occurences=occurences, streak=streak)
 
 
 @bp.route("/new", methods=["GET", "POST"])
@@ -134,7 +137,7 @@ def new_event():
         return render_template("new_event.html", form=form)
 
 
-@bp.route("/event/<int:id>/record", methods=["GET", "POST"])
+@bp.route("/<int:id>/record", methods=["GET", "POST"])
 @login_required
 def record_event(id):
     form = RecordEventForm()
@@ -146,6 +149,16 @@ def record_event(id):
             db.insert_measurement_of_event(event_id=id, value=numeric_value)
         else:
             db.insert_occurence_of_event(event_id=id)
+
+        streak = db.get_streak(event_id=id)
+        if not streak:
+            print("insert new streak")
+            db.insert_streak(event_id=id)
+        else:
+            print(f"increment streak")
+            db.update_streak(event_id=id, streak=streak[1] + 1)
+
+        print(f"streak={streak}")
         return redirect(url_for("main.dashboard"))
     else:
         event = db.get_event_by_id(event_id=id, user_id=current_user.id)
@@ -153,7 +166,7 @@ def record_event(id):
         return render_template("record_event.html", event=event, form=form)
 
 
-@bp.route("/event/<int:id>/delete", methods=["POST"])
+@bp.route("/<int:id>/delete", methods=["POST"])
 @login_required
 def delete_event(id):
     print(f"delete {id}")

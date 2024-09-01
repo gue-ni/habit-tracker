@@ -1,6 +1,14 @@
 import sqlite3
+import datetime
+
 
 database = "./db/database.sqlite"
+
+
+def get_last_monday():
+    today = datetime.date.today()
+    last_monday = today - datetime.timedelta(days=today.weekday())
+    return last_monday
 
 
 def insert_user(username, password):
@@ -102,7 +110,10 @@ def get_todo_daily_events(user_id):
 
 
 def get_todo_repeat_events(user_id):
-    query = """SELECT sub.id, sub.event_name, sub.event_type, sub.event_emoji, sub.description, sub.event_repeat, sub.hex_color, sub.cnt FROM
+    last_monday = get_last_monday()
+    formatted_date = last_monday.strftime("%Y-%m-%d")
+
+    query = """SELECT sub.id, sub.event_name, sub.event_type, sub.event_emoji, sub.description, sub.event_repeat, sub.hex_color, sub.cnt, sub.last_occured FROM
                 (
                     SELECT
                         e.id,
@@ -113,19 +124,20 @@ def get_todo_repeat_events(user_id):
                         e.event_repeat,
                         e.hex_color,
                         e.event_repeat_per_week,
-                        count(o.id) as cnt,
+                        COUNT(o.id) as cnt,
                         o.occured_at,
-                        e.user_id
+                        e.user_id,
+                        MAX(o.occured_at) AS last_occured
                     FROM events e
                     LEFT JOIN occurences o
-                    ON e.id = o.event_id AND o.occured_at > DATETIME('now', '-7 day')
+                    ON e.id = o.event_id AND DATE(o.occured_at) >= DATE(?)
                     GROUP BY e.id
                 ) AS sub
-                WHERE sub.cnt < sub.event_repeat_per_week AND sub.event_repeat = 'WEEKLY' AND user_id = ?
+                WHERE sub.cnt < sub.event_repeat_per_week AND sub.event_repeat = 'WEEKLY' AND user_id = ? AND (sub.last_occured IS NULL OR DATE(sub.last_occured) != CURRENT_DATE)
             """
     con = sqlite3.connect(database)
     cur = con.cursor()
-    cur.execute(query, (user_id,))
+    cur.execute(query, (user_id, formatted_date))
     result = cur.fetchall()
     con.close()
     return result
@@ -205,6 +217,46 @@ def get_all_measurements(event_id):
     result = cur.fetchall()
     con.close()
     return result
+
+
+def get_streak(event_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    query = "SELECT event_id, streak FROM streaks WHERE event_id = ?"
+    cur.execute(
+        query,
+        (event_id,),
+    )
+    result = cur.fetchone()
+    con.close()
+    return result
+
+
+def insert_streak(event_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    query = "INSERT INTO streaks (event_id, streak) VALUES (?, 1)"
+    cur.execute(
+        query,
+        (event_id,),
+    )
+    con.commit()
+    con.close()
+
+
+def update_streak(event_id, streak):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    query = "UPDATE streaks SET streak = ? WHERE event_id = ?"
+    cur.execute(
+        query,
+        (
+            streak,
+            event_id,
+        ),
+    )
+    con.commit()
+    con.close()
 
 
 def increment_streak(event_id):
