@@ -133,7 +133,11 @@ def get_todo_repeat_events(user_id):
                     ON e.id = o.event_id AND o.occured_at > DATETIME(?)
                     GROUP BY e.id
                 ) AS sub
-                WHERE sub.cnt < sub.event_repeat_per_week AND sub.event_repeat = 'WEEKLY' AND user_id = ? AND (sub.last_occured IS NULL OR DATE(sub.last_occured) != CURRENT_DATE)
+                WHERE
+                    sub.cnt < sub.event_repeat_per_week
+                    AND sub.event_repeat = 'WEEKLY'
+                    AND user_id = ?
+                    AND  (sub.last_occured IS NULL OR DATE(sub.last_occured) != CURRENT_DATE)
 
             """
     con = sqlite3.connect(database)
