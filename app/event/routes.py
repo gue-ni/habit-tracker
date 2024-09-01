@@ -99,7 +99,6 @@ def new_event():
         event_repeat_per_week = None
 
         if event_repeat != "DAILY":
-            event_repeat = "WEEKLY"
             if event_repeat == EventFrequency.ONE_PER_WEEK.value:
                 event_repeat_per_week = 1
             elif event_repeat == EventFrequency.TWO_PER_WEEK.value:
@@ -110,6 +109,8 @@ def new_event():
                 event_repeat_per_week = 4
             elif event_repeat == EventFrequency.FIVE_PER_WEEK.value:
                 event_repeat_per_week = 5
+
+            event_repeat = "WEEKLY"
 
         print(event_repeat, event_repeat_per_week)
 
