@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
+import os
 
 import app.db as db
 from app.models import User
@@ -8,7 +9,10 @@ from app.models import User
 def create_app(config_class=None):
     app = Flask(__name__)
 
-    app.config["SECRET_KEY"] = "cool cool cool"
+    secret_key = os.getenv("SECRET_KEY", "change-this")
+    app.config["SECRET_KEY"] = secret_key
+
+    print(f"SECRET_KEY={secret_key}")
 
     login_manager = LoginManager()
     login_manager.login_view = "user.login"
@@ -34,7 +38,6 @@ def create_app(config_class=None):
     from app.event import bp as event_bp
 
     app.register_blueprint(event_bp, url_prefix="/event")
-
 
     @app.route("/test/")
     def test_page():
