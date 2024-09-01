@@ -18,18 +18,22 @@
       {% for event in events_todo %}
       <div class="pb-4">
         <a href="{{ url_for('event.record_event', id=event[0]) }}" class="">
-          <div class="p-4 w-full text-white rounded-lg border border-slate-900/10"
-            style="background-color: {{ event[6] }};">
-            {{ event[3] }} {{ event[1] }}
-            <!--
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="2" width="20" height="20" stroke="black" stroke-width="2" fill="none" />
-            </svg>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="2" width="20" height="20" stroke="black" stroke-width="2" fill="none" />
-              <path d="M6 12l4 4L18 8" stroke="black" stroke-width="2" fill="none" />
-            </svg>
-            -->
+          <div class="p-4 w-full text-white rounded-lg border border-slate-900/10 flex justify-between"
+            style="background-color: {{ event[6] }}">
+            <div>
+              <span>
+                {{ event[3] }}
+              </span>
+              <span>
+                {{ event[1] }}
+              </span>
+            </div>
+            <div>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 4L16 12L8 20" stroke="white" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
           </div>
         </a>
       </div>
@@ -38,7 +42,7 @@
   </div>
   {% endif %}
 
-  {% if events_done %}
+  {% if all_events %}
   <div class="py-4">
     <h2 class="text-2xl">
       Progress
@@ -46,7 +50,7 @@
   </div>
   <div class="py-4">
     <div class="bg-white p-4 rounded-lg border border-slate-900/10">
-      {% for event in events_done %}
+      {% for event in all_events %}
       <div class="py-2">
         <a href="{{ url_for('event.event', id=event[0]) }}">
           <div class="flex justify-between">

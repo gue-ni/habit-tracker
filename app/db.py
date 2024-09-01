@@ -205,3 +205,27 @@ def get_all_measurements(event_id):
     result = cur.fetchall()
     con.close()
     return result
+
+
+def increment_streak(event_id):
+    query = "UPDATE streaks SET streak = streak + 1 WHERE event_id = ?"
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute(
+        query,
+        (event_id,),
+    )
+    con.commit()
+    con.close()
+
+
+def delete_streak(event_id):
+    query = "DELETE FROM streaks WHERE event_id = ?"
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute(
+        query,
+        (event_id,),
+    )
+    con.commit()
+    con.close()

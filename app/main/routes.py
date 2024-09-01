@@ -27,6 +27,8 @@ def dashboard():
     all_events = db.get_all_events_by_owner(current_user.id)
     print(f"events={all_events}")
 
+    # check streak
+
     # todo
     todo = []
     todo_daily = db.get_todo_daily_events(current_user.id)
@@ -39,5 +41,5 @@ def dashboard():
     print(f"todo_week={todo_week}")
 
     return render_template(
-        "dashboard.html", user=current_user, events_todo=todo, events_done=all_events
+        "dashboard.html", user=current_user, events_todo=todo, all_events=all_events
     )

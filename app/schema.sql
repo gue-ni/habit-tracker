@@ -19,8 +19,6 @@ CREATE TABLE IF NOT EXISTS events (
   description TEXT,
   hex_color TEXT DEFAULT '#FF5733',
   FOREIGN KEY (user_id) REFERENCES users(user_id)
-
-
 );
 
 CREATE TABLE IF NOT EXISTS occurences (
@@ -34,12 +32,9 @@ CREATE TABLE IF NOT EXISTS occurences (
 
 CREATE TABLE IF NOT EXISTS streaks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  streak INTEGER NOT NULL,
+  streak INTEGER NOT NULL DEFAULT 1,
   last_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   active_since TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  event_id INTEGER NOT NULL,
+  event_id INTEGER NOT NULL UNIQUE,
   FOREIGN KEY (event_id) REFERENCES events(event_id)
 );
-
-
-

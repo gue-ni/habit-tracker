@@ -8,25 +8,23 @@ On the index page, there is a simple input UI for recording an event, picked
 from a list of previous event types. Every event type has it's own page, where
 there are a number of different statistics that provide insight into it.
 
-## Data Model
+## Build
 
-Occurence would be shown in histogram, with the type between occourences
-numeric values can be plotted on a graph The type determines what kind of
-visualization will be available
+### Development
 
-Event:
-	-	EventName: String
-	-	EventType: Occurence | Number | Text (this is really a
-		catch-all, which can also contain json or other structured
-		data)
-	- 	Date: DateTime Object
-	-	Owner: UserId
+```bash
+export FLASK_APP=app
+flask run --debug
+```
 
-User:
-	-	Id
-	- 	Name
-	-	Password
+### Deployment
+
+```bash
+./init_db.sh
+docker compose build
+docker compose up -d
+```
 
 ## Links
 
-- https://medium.com/analytics-vidhya/how-to-use-flask-login-with-sqlite3-9891b3248324
+-   https://medium.com/analytics-vidhya/how-to-use-flask-login-with-sqlite3-9891b3248324
