@@ -9,3 +9,6 @@ services:
       - '8080:5000'
     env_file:
       - .env
+
+    volumes:
+      - ./app:/srv/db
