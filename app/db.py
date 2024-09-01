@@ -130,14 +130,21 @@ def get_todo_repeat_events(user_id):
                         MAX(o.occured_at) AS last_occured
                     FROM events e
                     LEFT JOIN occurences o
-                    ON e.id = o.event_id AND DATE(o.occured_at) >= DATE(?)
+                    ON e.id = o.event_id AND o.occured_at > DATETIME(?)
                     GROUP BY e.id
                 ) AS sub
                 WHERE sub.cnt < sub.event_repeat_per_week AND sub.event_repeat = 'WEEKLY' AND user_id = ? AND (sub.last_occured IS NULL OR DATE(sub.last_occured) != CURRENT_DATE)
+
             """
     con = sqlite3.connect(database)
     cur = con.cursor()
-    cur.execute(query, (user_id, formatted_date))
+    cur.execute(
+        query,
+        (
+            formatted_date,
+            user_id,
+        ),
+    )
     result = cur.fetchall()
     con.close()
     return result
