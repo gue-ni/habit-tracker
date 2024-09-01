@@ -8,7 +8,18 @@ database = "./db/database.sqlite"
 def get_last_monday():
     today = datetime.date.today()
     last_monday = today - datetime.timedelta(days=today.weekday())
-    return last_monday
+    return last_monday.strftime("%Y-%m-%d")
+
+
+def get_yesterday():
+    today = datetime.date.today()
+    yesterday = today - datetime.timedelta(days=1)
+    return yesterday.strftime("%Y-%m-%d")
+
+
+def get_today():
+    today = datetime.date.today()
+    return today.strftime("%Y-%m-%d")
 
 
 def insert_user(username, password):
@@ -111,7 +122,6 @@ def get_todo_daily_events(user_id):
 
 def get_todo_repeat_events(user_id):
     last_monday = get_last_monday()
-    formatted_date = last_monday.strftime("%Y-%m-%d")
 
     query = """SELECT sub.id, sub.event_name, sub.event_type, sub.event_emoji, sub.description, sub.event_repeat, sub.hex_color, sub.cnt, sub.last_occured FROM
                 (
@@ -145,7 +155,7 @@ def get_todo_repeat_events(user_id):
     cur.execute(
         query,
         (
-            formatted_date,
+            last_monday,
             user_id,
         ),
     )
@@ -154,10 +164,15 @@ def get_todo_repeat_events(user_id):
     return result
 
 
-def get_all_events_by_owner(user_id):
+def get_all_events(user_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "SELECT id, event_name, event_type, event_emoji, description, event_repeat, hex_color FROM events WHERE user_id = ?"
+    query = """
+        SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, ifnull(s.streak, 0)
+        FROM events e
+        LEFT JOIN streaks s ON e.id = s.event_id
+        WHERE e.user_id = ?
+        """
     cur.execute(query, (user_id,))
     result = cur.fetchall()
     con.close()
@@ -292,3 +307,52 @@ def delete_streak(event_id):
     )
     con.commit()
     con.close()
+
+
+def get_all_occurances_between(event_id, start_date, end_date):
+    query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ? AND DATE(?) <= o.occured_at AND o.occured_at < DATE(?)"
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute(
+        query,
+        (
+            event_id,
+            start_date,
+            end_date,
+        ),
+    )
+    result = cur.fetchall()
+    con.close()
+    return result
+
+def get_day_streak(event_id):
+    query = """
+    WITH consecutive_days AS (
+    SELECT
+        occured_at,
+        ROW_NUMBER() OVER (ORDER BY occured_at DESC) AS row_num_desc,
+        ROW_NUMBER() OVER (ORDER BY occured_at ASC) AS row_num_asc
+    FROM
+        occurences
+    WHERE
+        occured_at <= date('now') AND event_id = ?
+    )
+    SELECT
+        COUNT(*) AS consecutive_days
+    FROM
+        consecutive_days
+    WHERE
+        row_num_desc = row_num_asc
+
+    """
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute(
+        query,
+        (
+            event_id,
+        ),
+    )
+    result = cur.fetchall()
+    con.close()
+    return result

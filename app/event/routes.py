@@ -84,7 +84,9 @@ def event(id):
         occurences = db.get_all_occurences_of_event(event_id=id)
         print(occurences)
 
-    return render_template("event.html", event=event, occurences=occurences, streak=streak)
+    return render_template(
+        "event.html", event=event, occurences=occurences, streak=streak
+    )
 
 
 @bp.route("/new", methods=["GET", "POST"])
