@@ -198,7 +198,7 @@ def get_all_events(user_id):
 def get_event(event_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "SELECT id, event_name, event_type, event_emoji, description, event_repeat, hex_color FROM events WHERE id = ?"
+    query = "SELECT id, event_name, event_type, event_emoji, description, event_repeat, hex_color, event_repeat_per_week FROM events WHERE id = ?"
     cur.execute(
         query,
         (

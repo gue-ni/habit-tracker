@@ -1,10 +1,12 @@
-from flask import render_template, redirect, url_for
+from collections import defaultdict
+from datetime import date, datetime
+
+from flask import render_template, redirect, url_for, current_app
 from app.main import bp
 from flask_login import (
     login_required,
     current_user,
 )
-from datetime import date, datetime
 
 import app.db as db
 
@@ -57,7 +59,7 @@ def compute_streak(event_id):
             else:
                 break
     else:
-        repeat_per_week = event[5]
+        repeat_per_week = event[7]
 
         event_counts = defaultdict(int)
 
@@ -70,7 +72,7 @@ def compute_streak(event_id):
         year, week = current_year, current_week
     
         while (year, week) in event_counts:
-            if repeat_per_week <= event_counts[(year, week)]:
+            if int(repeat_per_week) <= event_counts[(year, week)]:
                 streak = streak + 1
             else:
                 break
@@ -89,11 +91,13 @@ def compute_streak(event_id):
 def dashboard():
 
     streak_to_recompute = db.get_all_streaks_for_user(current_user.id)
-    print(f"recompute={streak_to_recompute}")
+    current_app.logger.debug(f"recompute={streak_to_recompute}")
+
     for streak in streak_to_recompute:
       event_id = streak[0]
       old_count = streak[2]
       new_count = compute_streak(event_id=event_id)
+      print(f"{streak}, new_count={new_count}")
       db.update_streak(event_id=event_id, streak=new_count)
 
     all_events = db.get_all_events(current_user.id)
