@@ -1,27 +1,17 @@
-from flask import render_template, request, url_for, redirect
-from flask_login import (
-    login_user,
-    login_required,
-    logout_user,
-    current_user,
-)
+from app import db
+from app.event import bp
 
-from flask_wtf import FlaskForm
-from wtforms import (
-    StringField,
-    PasswordField,
-    SubmitField,
-    BooleanField,
-    SelectField,
-    DecimalField,
-)
-from wtforms.validators import DataRequired, Length, EqualTo
+
 import random
-
+import datetime
 from enum import Enum
 
-import app.db as db
-from app.event import bp
+
+from flask import render_template, request, url_for, redirect
+from flask_login import login_required, current_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, SelectField, DecimalField
+from wtforms.validators import DataRequired, Length, EqualTo
 
 
 class EventType(Enum):
@@ -43,7 +33,20 @@ class CreateEventForm(FlaskForm):
     event_name = StringField("Name", validators=[DataRequired()])
     event_emoji = SelectField(
         "Emoji",
-        choices=["💪🏼", "🏃‍♂️", "️⚽", "🏋️‍♀️", "😴", "🛌", "🌙", "🎓", "🧠", "📚", "📖", "💧"],
+        choices=[
+            "💪🏼",
+            "🏃‍♂️",
+            "️⚽",
+            "🏋️‍♀️",
+            "😴",
+            "🛌",
+            "🌙",
+            "🎓",
+            "🧠",
+            "📚",
+            "📖",
+            "💧",
+        ],
         validators=[DataRequired()],
     )
     event_description = StringField("Description")
@@ -63,6 +66,20 @@ class CreateEventForm(FlaskForm):
 class RecordEventForm(FlaskForm):
     numeric_value = DecimalField("Numeric Value")
     submit = SubmitField("Done")
+
+
+def get_last_five_weeks_dates():
+    today = datetime.today()
+    start_of_week = today - timedelta(days=today.weekday())
+
+    days = []
+
+    for i in range(5):
+        week_start = start_of_week - timedelta(weeks=i)
+        week_dates = [week_start + timedelta(days=d) for d in range(7)]
+        days += week_dates
+
+    return days
 
 
 @bp.route("/<int:id>", methods=["GET"])

@@ -1,23 +1,13 @@
-from flask import (
-    render_template,
-    redirect,
-    url_for,
-    flash,
-)
-from flask_login import (
-    login_user,
-    login_required,
-    logout_user,
-    current_user,
-)
+from app.user import bp
+from app.user.forms import SignupForm, LoginForm
+from app.models import User
+from app import db
 
 
 import bcrypt
 
-from app.user import bp
-from app.user.forms import SignupForm, LoginForm
-from app.models import User
-import app.db as db
+from flask import render_template, redirect, url_for, flash
+from flask_login import login_user, login_required, logout_user, current_user
 
 
 @bp.route("/login_old", methods=["GET", "POST"])

@@ -14,8 +14,10 @@
 <div class="p-6 font-semibold text-slate-700">
   {% if event[4] %}
   <div class="py-4">
+    <div class="py-2">
+      <h2>Description</h2>
+    </div>
     <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
-      <h2>Description:</h2>
       <p>
         {{ event[4] }}
       </p>
@@ -24,10 +26,12 @@
   {% endif %}
   {% if streak %}
   <div class="py-4">
+    <div class="py-2">
+      <h2>Current Streak</h2>
+    </div>
     <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
-      <h2>Streak:</h2>
       <div class="text-3xl text-center">
-        {{ streak[1] }}
+        {{ streak[1] }} 🔥
       </div>
     </div>
   </div>
@@ -110,7 +114,6 @@
       </div>
     </a>
   </div>
-
 
   <div class="py-4">
     <form action="{{ url_for('event.delete_event', id=event[0])}}" method="post">

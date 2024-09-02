@@ -1,12 +1,14 @@
-from flask import Flask
-from flask_login import LoginManager
-import os
-
-import app.db as db
+from app import db
 from app.models import User
 
 
-def create_app(config_class=None):
+import os
+
+from flask import Flask
+from flask_login import LoginManager
+
+
+def create_app():
     app = Flask(__name__)
 
     secret_key = os.getenv("SECRET_KEY", "change-this")

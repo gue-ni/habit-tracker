@@ -23,6 +23,14 @@ def fetchone(query, params=()):
     return row
 
 
+def execute(query, params=()):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute(query, params)
+    con.commit()
+    con.close()
+
+
 def get_last_monday():
     today = datetime.date.today()
     last_monday = today - datetime.timedelta(days=today.weekday())
@@ -50,35 +58,18 @@ def insert_user(username, password):
 
 
 def get_users():
-    con = sqlite3.connect(database)
-    cur = con.cursor()
     query = "SELECT name, password FROM users"
-    cur.execute(query)
-    users = cur.fetchall()
-    con.close()
-    return users
+    return fetchall(query)
 
 
 def get_user_by_name(username):
-    con = sqlite3.connect(database)
-    cur = con.cursor()
     query = "SELECT id, name, password FROM users WHERE name = ?"
-    cur.execute(query, (username,))
-    user = cur.fetchone()
-    con.commit()
-    con.close()
-    return user
+    return fetchone(query, (username,))
 
 
 def get_user_by_id(id):
-    con = sqlite3.connect(database)
-    cur = con.cursor()
     query = "SELECT id, name, password FROM users WHERE id = ?"
-    cur.execute(query, (id,))
-    user = cur.fetchone()
-    con.commit()
-    con.close()
-    return user
+    return fetchone(query, (id,))
 
 
 def insert_event(
