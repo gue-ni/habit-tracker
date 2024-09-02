@@ -3,7 +3,7 @@ from app.event import bp
 
 
 import random
-import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 
 
@@ -77,9 +77,10 @@ def get_last_five_weeks_dates():
     for i in range(5):
         week_start = start_of_week - timedelta(weeks=i)
         week_dates = [week_start + timedelta(days=d) for d in range(7)]
+        week_dates.reverse()
         days += week_dates
 
-    return days
+    return [day.date() for day in days]
 
 
 @bp.route("/<int:id>", methods=["GET"])
@@ -89,20 +90,41 @@ def event(id):
     print(event)
 
     streak = db.get_streak(event_id=id)
-    print(f"streak={streak}")
+    # print(f"streak={streak}")
 
     measurements = None
     occurences = None
+    calendar = None
 
     if event[2] == EventType.MEASURE.value:
         measurements = db.get_all_measurements(event_id=id)
         print(measurements)
     else:
         occurences = db.get_all_occurences_of_event(event_id=id)
-        print(occurences)
+        occurences = [
+            datetime.strptime(occurence[1], "%Y-%m-%d %H:%M:%S").date()
+            for occurence in occurences
+        ]
+
+        last_five_weeks = get_last_five_weeks_dates()
+
+        calendar = []
+
+        for day in last_five_weeks:
+            if day in occurences:
+                calendar.append((day, True))
+            else:
+                calendar.append((day, False))
+
+        calendar.reverse()
+        calendar = [(day.strftime("%d"), v) for (day, v) in calendar]
 
     return render_template(
-        "event.html", event=event, occurences=occurences, streak=streak
+        "event.html",
+        event=event,
+        occurences=occurences,
+        streak=streak,
+        calendar=calendar,
     )
 
 
