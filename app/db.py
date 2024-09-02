@@ -4,7 +4,8 @@ import datetime
 
 database = "./db/database.sqlite"
 
-def fetchall(query, params):
+
+def fetchall(query, params=()):
     con = sqlite3.connect(database)
     cur = con.cursor()
     cur.execute(query, params)
@@ -13,7 +14,7 @@ def fetchall(query, params):
     return rows
 
 
-def fetchone(query, params):
+def fetchone(query, params=()):
     con = sqlite3.connect(database)
     cur = con.cursor()
     cur.execute(query, params)
@@ -195,15 +196,14 @@ def get_all_events(user_id):
     con.close()
     return result
 
+
 def get_event(event_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
     query = "SELECT id, event_name, event_type, event_emoji, description, event_repeat, hex_color, event_repeat_per_week FROM events WHERE id = ?"
     cur.execute(
         query,
-        (
-            event_id,
-        ),
+        (event_id,),
     )
     result = cur.fetchone()
     con.close()
@@ -356,10 +356,10 @@ def get_all_occurances_between(event_id, start_date, end_date):
     con.close()
     return result
 
+
 def get_all_occurances(event_id):
     query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ?"
     return fetchall(query, (event_id,))
-
 
 
 def get_all_occurences(event_id):
@@ -367,9 +367,8 @@ def get_all_occurences(event_id):
     return fetchall(query, (event_id,))
 
 
-
 def get_streaks_to_recompute(user_id):
-   query = """
+    query = """
       SELECT e.id, e.event_name, s.streak, s.last_updated_at
       FROM streaks s
       JOIN events e
@@ -378,7 +377,8 @@ def get_streaks_to_recompute(user_id):
       e.user_id = ?
       AND DATE(s.last_updated_at) < DATE('now')
    """
-   return fetchall(query, (user_id,))
+    return fetchall(query, (user_id,))
+
 
 def get_all_streaks_for_user(user_id):
     query = """
@@ -389,4 +389,3 @@ def get_all_streaks_for_user(user_id):
       e.user_id = ?
     """
     return fetchall(query, (user_id,))
-
