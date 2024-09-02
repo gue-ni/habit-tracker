@@ -4,7 +4,7 @@ from flask_login import (
     login_required,
     current_user,
 )
-from datetime import date
+from datetime import date, datetime
 
 import app.db as db
 
@@ -41,8 +41,11 @@ def compute_streak(event_id):
 
     if repeat == 'DAILY':
         for i in range(len(occurences) - 1):
-            current_date = date(occurences[i][1]) 
-            previous_date = date(occurences[i + 1][1])
+            current = occurences[i]
+            previous = occurences[i + 1]
+
+            current_date = datetime.strptime(current[1], "%Y-%m-%d %H:%M:%S").date()
+            previous_date = datetime.strptime(previous[1], "%Y-%m-%d %H:%M:%S").date()
 
             difference = current_date - previous_date
             if difference.days == 1:
@@ -67,7 +70,7 @@ def dashboard():
     for streak in streak_to_recompute:
       event_id = streak[0]
       old_count = streak[2]
-      new_count = compute_steak(event_id=event_id)
+      new_count = compute_streak(event_id=event_id)
       db.update_streak(event_id=event_id, streak=new_count)
 
     all_events = db.get_all_events(current_user.id)

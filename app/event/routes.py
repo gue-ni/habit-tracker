@@ -89,6 +89,11 @@ def event(id):
     )
 
 
+def random_hex_color():
+    colors = ["#ff00ff", "#ff0000", "#003366", "#4B0082"]
+    return random.choice(colors)
+
+  
 @bp.route("/new", methods=["GET", "POST"])
 @login_required
 def new_event():
@@ -119,8 +124,7 @@ def new_event():
 
         print(event_repeat, event_repeat_per_week)
 
-        colors = ["#ff00ff", "#ff0000", "#003366", "#4B0082"]
-        hex_color = random.choice(colors)
+        hex_color = random_hex_color() 
 
         db.insert_event(
             event_name=event_name,
