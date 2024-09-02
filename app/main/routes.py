@@ -21,63 +21,57 @@ def about():
     return render_template("index.html")
 
 
+def get_todos(user_id):
+    todo = []
+    todo_daily = db.get_todo_daily_events(user_id)
+    todo += todo_daily
+
+    todo_week = db.get_todo_repeat_events(user_id)
+    todo += todo_week
+    return todo;
+
+# this should also be called after recording an occurence
+def compute_streak(event_id):
+  event = db.get_event(event_id=event_id)
+  repeat = event[4] # TODO: this might not be correct
+  occurences = db.get_all_occurences(event_id=event_id)
+  occurences.reverse()
+
+  streak = 0
+
+  if repeat == 'DAILY':
+    for i in range(len(occurences) - 1):
+      current_date = date(occurences[i][2]) 
+      previous_date = date(occurences[i + 1][2])
+
+      difference = current_date - previous_date
+      if difference.days == 1:
+        streak = streak + 1
+      else:
+        break
+
+    pass
+  else:
+    repeat_per_week = event[5] # might not be correct
+    # streak = count_current_week + the count of the weeks where at least rpw was achieved
+    pass
+
+  return streak
+
+
+# should this be moved to event?
 @bp.route("/dashboard")
 @login_required
 def dashboard():
     all_events = db.get_all_events(current_user.id)
-    # print(f"events={all_events}")
 
-    # check streaks
-    # TODO: in the future, this should only recalculate if the streak is active if a datestamp
-    for event in all_events:
-        event_id = event[0]
-        event_name = event[1]
-        event_type = event[5]
-        streak = event[7]
+    streak_to_recompute = db.get_streaks_to_recompute()
+    for streak in streak_to_recompute:
+      event_id = streak[0]
+      count = compute_steak(event_id=event_id)
+      db.update_streak(event_id=event_id, streak=count)
 
-        if streak != None and streak > 1:
-            date_since = None
-            if event_type == "DAILY":
-                date_since = db.get_yesterday()
-                occurances = db.get_all_occurances_between(
-                    event_id=event_id, start_date=date_since, end_date=db.get_today()
-                )
-
-                print(event_name, occurances)
-
-                if len(occurances) == 0:
-                    print(f"streak for event {event_name} should be reset")
-                    #db.delete_streak(event_id=event_id)
-                else:
-                    print(f"streak for event {event_name} is still active")
-
-            else:
-                date_since = db.get_yesterday()
-                occurances = db.get_all_occurances_between(
-                    event_id=event_id, start_date=date_since, end_date=db.get_today()
-                )
-                print(event_name, occurances)
-
-                if len(occurances) < 3:
-                    # db.update_streak(event_id=event_id, streak=0)
-                    print(f"reset streak for event {event_name}")
-                    pass
-
-    all_events = db.get_all_events(current_user.id)
-
-    test = db.get_day_streak(event_id=9)
-    print(test)
-
-    # todo
-    todo = []
-    todo_daily = db.get_todo_daily_events(current_user.id)
-    todo += todo_daily
-
-    todo_week = db.get_todo_repeat_events(current_user.id)
-    todo += todo_week
-
-    # print(f"todo_daily={todo_daily}")
-    # print(f"todo_week={todo_week}")
+    todo = get_todos(current_user.id)
 
     return render_template(
         "dashboard.html", user=current_user, events_todo=todo, all_events=all_events

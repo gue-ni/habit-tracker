@@ -4,6 +4,23 @@ import datetime
 
 database = "./db/database.sqlite"
 
+def fetchall(query, params):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute(query, params)
+    rows = cur.fetchall()
+    con.close()
+    return rows
+
+
+def fetchone(query, params):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute(query, params)
+    row = cur.fetchone()
+    con.close()
+    return row
+
 
 def get_last_monday():
     today = datetime.date.today()
@@ -324,6 +341,10 @@ def get_all_occurances_between(event_id, start_date, end_date):
     result = cur.fetchall()
     con.close()
     return result
+
+def get_all_occurences(event_id):
+    query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ?"
+    return fetchall(query, (event_id,))
 
 def get_day_streak(event_id):
     query = """
