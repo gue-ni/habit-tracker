@@ -34,18 +34,22 @@ def get_todos(user_id):
 def compute_streak(event_id):
     event = db.get_event(event_id)
     repeat = event[5] # TODO: this might not be correct
+
     occurences = db.get_all_occurences(event_id=event_id)
     occurences.reverse()
+
+    if len(occurences) == 0:
+        return 0
+
+    dates = [datetime.strptime(occurence[1], "%Y-%m-%d %H:%M:%S").date() for occurence in occurences]
 
     streak = 0
 
     if repeat == 'DAILY':
-        for i in range(len(occurences) - 1):
-            current = occurences[i]
-            previous = occurences[i + 1]
+        for i in range(len(dates) - 1):
 
-            current_date = datetime.strptime(current[1], "%Y-%m-%d %H:%M:%S").date()
-            previous_date = datetime.strptime(previous[1], "%Y-%m-%d %H:%M:%S").date()
+            current_date = dates[i] 
+            previous_date = dates[i+1]
 
             difference = current_date - previous_date
             if difference.days == 1:
@@ -53,9 +57,28 @@ def compute_streak(event_id):
             else:
                 break
     else:
-        repeat_per_week = event[5] # might not be correct
-        # streak = count_current_week + the count of the weeks where at least rpw was achieved
-        pass
+        repeat_per_week = event[5]
+
+        event_counts = defaultdict(int)
+
+        for date in dates:
+            year, week, _ = date.isocalendar()
+            event_counts[(year, week)] += 1
+
+        current_year, current_week, _ = datetime.now().isocalendar()
+
+        year, week = current_year, current_week
+    
+        while (year, week) in event_counts:
+            if repeat_per_week <= event_counts[(year, week)]:
+                streak = streak + 1
+            else:
+                break
+        
+            week -= 1
+            if week == 0:
+                year -= 1
+                week = 52 
 
     return streak
 
