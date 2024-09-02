@@ -195,6 +195,20 @@ def get_all_events(user_id):
     con.close()
     return result
 
+def get_event(event_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    query = "SELECT id, event_name, event_type, event_emoji, description, event_repeat, hex_color FROM events WHERE id = ?"
+    cur.execute(
+        query,
+        (
+            event_id,
+        ),
+    )
+    result = cur.fetchone()
+    con.close()
+    return result
+
 
 def get_event_by_id(user_id, event_id):
     con = sqlite3.connect(database)
@@ -303,7 +317,7 @@ def update_streak(event_id, streak):
 
 
 def increment_streak(event_id):
-    query = "UPDATE streaks SET streak = streak + 1 WHERE event_id = ?"
+    query = "UPDATE streaks SET streak = streak + 1, last_updated_at = CURRENT_TIMESTAMP WHERE event_id = ?"
     con = sqlite3.connect(database)
     cur = con.cursor()
     cur.execute(
@@ -342,38 +356,37 @@ def get_all_occurances_between(event_id, start_date, end_date):
     con.close()
     return result
 
+def get_all_occurances(event_id):
+    query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ?"
+    return fetchall(query, (event_id,))
+
+
+
 def get_all_occurences(event_id):
     query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ?"
     return fetchall(query, (event_id,))
 
-def get_day_streak(event_id):
-    query = """
-    WITH consecutive_days AS (
-    SELECT
-        occured_at,
-        ROW_NUMBER() OVER (ORDER BY occured_at DESC) AS row_num_desc,
-        ROW_NUMBER() OVER (ORDER BY occured_at ASC) AS row_num_asc
-    FROM
-        occurences
-    WHERE
-        occured_at <= date('now') AND event_id = ?
-    )
-    SELECT
-        COUNT(*) AS consecutive_days
-    FROM
-        consecutive_days
-    WHERE
-        row_num_desc = row_num_asc
 
+
+def get_streaks_to_recompute(user_id):
+   query = """
+      SELECT e.id, e.event_name, s.streak, s.last_updated_at
+      FROM streaks s 
+      JOIN events e 
+      ON s.event_id = e.id
+      WHERE 
+      e.user_id = ?
+      AND DATE(s.last_updated_at) < DATE('now')
+   """
+   return fetchall(query, (user_id,))
+
+def get_all_streaks_for_user(user_id):
+    query = """
+      SELECT e.id, e.event_name, s.streak, s.last_updated_at
+      FROM streaks s 
+      JOIN events e ON s.event_id = e.id
+      WHERE 
+      e.user_id = ?
     """
-    con = sqlite3.connect(database)
-    cur = con.cursor()
-    cur.execute(
-        query,
-        (
-            event_id,
-        ),
-    )
-    result = cur.fetchall()
-    con.close()
-    return result
+    return fetchall(query, (user_id,))
+

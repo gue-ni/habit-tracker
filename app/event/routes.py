@@ -160,6 +160,8 @@ def record_event(id):
             print(f"increment streak")
             db.update_streak(event_id=id, streak=streak[1] + 1)
 
+        # TODO: recalculate streak
+
         print(f"streak={streak}")
         return redirect(url_for("main.dashboard"))
     else:
