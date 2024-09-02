@@ -24,9 +24,10 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TABLE IF NOT EXISTS occurences (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   event_id INTEGER,
-  occured_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  occured_at DATE DEFAULT CURRENT_DATE,
   comment TEXT,
   numeric_value FLOAT,
+  UNIQUE (event_id, occured_at),
   FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
 );
 

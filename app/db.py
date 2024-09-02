@@ -129,48 +129,26 @@ def get_todo_daily_events(user_id):
     return result
 
 
-def get_todo_repeat_events(user_id):
+def get_todo_weekly_events(user_id):
     last_monday = get_last_monday()
 
     query = """SELECT sub.id, sub.event_name, sub.event_type, sub.event_emoji, sub.description, sub.event_repeat, sub.hex_color, sub.cnt, sub.last_occured FROM
                 (
-                    SELECT
-                        e.id,
-                        e.event_name,
-                        e.event_type,
-                        e.event_emoji,
-                        e.description,
-                        e.event_repeat,
-                        e.hex_color,
-                        e.event_repeat_per_week,
-                        COUNT(o.id) as cnt,
-                        o.occured_at,
-                        e.user_id,
-                        MAX(o.occured_at) AS last_occured
+                    SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, e.event_repeat_per_week, COUNT(o.id) as cnt, o.occured_at, e.user_id, MAX(o.occured_at) AS last_occured
                     FROM events e
                     LEFT JOIN occurences o
-                    ON e.id = o.event_id AND o.occured_at > DATETIME(?)
+                    ON e.id = o.event_id
                     GROUP BY e.id
+                    HAVING DATE(?) <= o.occured_at OR o.occured_at IS NULL
                 ) AS sub
                 WHERE
-                    sub.cnt < sub.event_repeat_per_week
-                    AND sub.event_repeat = 'WEEKLY'
-                    AND user_id = ?
-                    AND  (sub.last_occured IS NULL OR DATE(sub.last_occured) != CURRENT_DATE)
-
+                    sub.event_repeat = 'WEEKLY'
+                    AND sub.user_id = ?
+                    AND sub.cnt < sub.event_repeat_per_week
+                    AND (sub.last_occured IS NULL OR sub.last_occured != CURRENT_DATE)
             """
-    con = sqlite3.connect(database)
-    cur = con.cursor()
-    cur.execute(
-        query,
-        (
-            last_monday,
-            user_id,
-        ),
-    )
-    result = cur.fetchall()
-    con.close()
-    return result
+
+    return fetchall(query, (last_monday, user_id))
 
 
 def get_all_events(user_id):

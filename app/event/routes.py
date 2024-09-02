@@ -102,7 +102,7 @@ def event(id):
     else:
         occurences = db.get_all_occurences_of_event(event_id=id)
         occurences = [
-            datetime.strptime(occurence[1], "%Y-%m-%d %H:%M:%S").date()
+            datetime.strptime(occurence[1], "%Y-%m-%d").date()
             for occurence in occurences
         ]
 
