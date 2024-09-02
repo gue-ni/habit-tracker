@@ -43,7 +43,7 @@ class CreateEventForm(FlaskForm):
     event_name = StringField("Name", validators=[DataRequired()])
     event_emoji = SelectField(
         "Emoji",
-        choices=["💪🏼", "🏃‍♂️", "️⚽", "🏋️‍♀️", "😴", "🛌", "🌙", "🎓", "🧠", "📚", "📖"],
+        choices=["💪🏼", "🏃‍♂️", "️⚽", "🏋️‍♀️", "😴", "🛌", "🌙", "🎓", "🧠", "📚", "📖", "💧"],
         validators=[DataRequired()],
     )
     event_description = StringField("Description")
@@ -93,7 +93,7 @@ def random_hex_color():
     colors = ["#ff00ff", "#ff0000", "#003366", "#4B0082"]
     return random.choice(colors)
 
-  
+
 @bp.route("/new", methods=["GET", "POST"])
 @login_required
 def new_event():
@@ -124,7 +124,7 @@ def new_event():
 
         print(event_repeat, event_repeat_per_week)
 
-        hex_color = random_hex_color() 
+        hex_color = random_hex_color()
 
         db.insert_event(
             event_name=event_name,

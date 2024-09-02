@@ -102,11 +102,20 @@
     </div>
     {% endif %}
   </div>
+
+  <div class="py-4">
+    <a href="{{ url_for('event.record_event', id=event[0]) }}" class="">
+      <div class="bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10">
+        Record
+      </div>
+    </a>
+  </div>
+
+
   <div class="py-4">
     <form action="{{ url_for('event.delete_event', id=event[0])}}" method="post">
       <button type="submit"
-        class="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md">Delete
-        Habit</button>
+        class="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md">Delete</button>
     </form>
   </div>
 </div>

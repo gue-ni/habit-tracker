@@ -43,14 +43,21 @@ def compute_streak(event_id):
     if len(occurences) == 0:
         return 0
 
+
+    today = datetime.now().date()
+
     dates = [datetime.strptime(occurence[1], "%Y-%m-%d %H:%M:%S").date() for occurence in occurences]
 
-    streak = 0
+
+    if len(dates) == 1 and dates[0] == today:
+        return 1
+
+    streak = 1
 
     if repeat == 'DAILY':
         for i in range(len(dates) - 1):
 
-            current_date = dates[i] 
+            current_date = dates[i]
             previous_date = dates[i+1]
 
             difference = current_date - previous_date
@@ -70,17 +77,17 @@ def compute_streak(event_id):
         current_year, current_week, _ = datetime.now().isocalendar()
 
         year, week = current_year, current_week
-    
+
         while (year, week) in event_counts:
             if int(repeat_per_week) <= event_counts[(year, week)]:
                 streak = streak + 1
             else:
                 break
-        
+
             week -= 1
             if week == 0:
                 year -= 1
-                week = 52 
+                week = 52
 
     return streak
 
@@ -96,13 +103,13 @@ def dashboard():
       old_count = streak[2]
       new_count = compute_streak(event_id=event_id)
       print(f"{streak}, old_count={old_count}, new_count={new_count}")
-      db.update_streak(event_id=event_id, streak=new_count)
+      #db.update_streak(event_id=event_id, streak=new_count)
 
     all_events = db.get_all_events(current_user.id)
-    print(f"all_events={all_events}")
+    #print(f"all_events={all_events}")
 
     todo = get_todos(current_user.id)
-    print(f"todo={todo}")
+    #print(f"todo={todo}")
 
     return render_template(
         "dashboard.html", user=current_user, events_todo=todo, all_events=all_events

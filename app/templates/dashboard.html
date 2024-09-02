@@ -51,12 +51,19 @@
   <div class="py-4">
     <div class="bg-white p-4 rounded-lg border border-slate-900/10">
       {% for event in all_events %}
-      <div class="py-2">
+      <div>
         <a href="{{ url_for('event.event', id=event[0]) }}">
-          <div class="flex justify-between">
+          <div class="flex justify-between py-4">
             <div><span class="pr-2">{{ event[3] }}</span> {{ event[1] }}</div>
-            <div><span>{{ event[7] }} 🔥</span></div>
+            <div>
+              {% if event[7] > 0 %}
+              <span>{{ event[7] }} 🔥</span>
+              {% endif %}
+            </div>
           </div>
+          {% if not loop.last %}
+          <hr class="border-slate-900/10" />
+          {% endif %}
         </a>
       </div>
       {% endfor %}

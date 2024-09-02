@@ -371,10 +371,10 @@ def get_all_occurences(event_id):
 def get_streaks_to_recompute(user_id):
    query = """
       SELECT e.id, e.event_name, s.streak, s.last_updated_at
-      FROM streaks s 
-      JOIN events e 
+      FROM streaks s
+      JOIN events e
       ON s.event_id = e.id
-      WHERE 
+      WHERE
       e.user_id = ?
       AND DATE(s.last_updated_at) < DATE('now')
    """
@@ -383,9 +383,9 @@ def get_streaks_to_recompute(user_id):
 def get_all_streaks_for_user(user_id):
     query = """
       SELECT e.id, e.event_name, s.streak, s.last_updated_at
-      FROM streaks s 
+      FROM streaks s
       JOIN events e ON s.event_id = e.id
-      WHERE 
+      WHERE
       e.user_id = ?
     """
     return fetchall(query, (user_id,))
