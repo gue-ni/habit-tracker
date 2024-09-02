@@ -4,7 +4,7 @@ from flask_login import (
     login_required,
     current_user,
 )
-
+from datetime import date
 
 import app.db as db
 
@@ -41,15 +41,14 @@ def compute_streak(event_id):
 
     if repeat == 'DAILY':
         for i in range(len(occurences) - 1):
-        current_date = date(occurences[i][1]) 
-        previous_date = date(occurences[i + 1][1])
+            current_date = date(occurences[i][1]) 
+            previous_date = date(occurences[i + 1][1])
 
-        difference = current_date - previous_date
-        if difference.days == 1:
-            streak = streak + 1
-        else:
-            break
-
+            difference = current_date - previous_date
+            if difference.days == 1:
+                streak = streak + 1
+            else:
+                break
     else:
         repeat_per_week = event[5] # might not be correct
         # streak = count_current_week + the count of the weeks where at least rpw was achieved
