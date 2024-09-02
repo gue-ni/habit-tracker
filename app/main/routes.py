@@ -1,14 +1,14 @@
 from collections import defaultdict
 from datetime import date, datetime
 
-from flask import render_template, redirect, url_for, current_app
-from app.main import bp
-from flask_login import (
-    login_required,
-    current_user,
-)
 
-import app.db as db
+from flask import render_template, redirect, url_for, current_app
+from flask_login import login_required, current_user
+
+
+from app.main import bp
+from app import db
+#import app.db as db
 
 
 @bp.route("/")
@@ -85,11 +85,9 @@ def compute_streak(event_id):
     return streak
 
 
-# should this be moved to event?
 @bp.route("/dashboard")
 @login_required
 def dashboard():
-
     streak_to_recompute = db.get_all_streaks_for_user(current_user.id)
     current_app.logger.debug(f"recompute={streak_to_recompute}")
 
@@ -97,7 +95,7 @@ def dashboard():
       event_id = streak[0]
       old_count = streak[2]
       new_count = compute_streak(event_id=event_id)
-      print(f"{streak}, new_count={new_count}")
+      print(f"{streak}, old_count={old_count}, new_count={new_count}")
       db.update_streak(event_id=event_id, streak=new_count)
 
     all_events = db.get_all_events(current_user.id)
