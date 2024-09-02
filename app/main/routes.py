@@ -54,7 +54,7 @@ def compute_streak(event_id):
         # streak = count_current_week + the count of the weeks where at least rpw was achieved
         pass
 
-  return streak
+    return streak
 
 
 # should this be moved to event?
