@@ -53,7 +53,40 @@
   <div class="py-4">
     {% if event[2] == "MEASURE" %}
     <div>
-      show graph of measuremnts
+      <canvas id="my_chart"></canvas>
+      <script>
+        const dates = ['2024-09-01', '2024-09-02', '2024-09-03', '2024-09-04', '2024-09-05'];
+        const dataPoints = [12, 19, 3, 5, 2];
+
+        new Chart('my_chart', {
+          type: 'line',
+          data: {
+            labels: dates,
+            datasets: [{
+              label: '',
+              data: dataPoints,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'day',
+                  tooltipFormat: 'MMM dd, yyyy',
+                  displayFormats: {
+                    day: 'MMM dd'
+                  }
+                },
+              },
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      </script>
     </div>
     {% else %}
     <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
