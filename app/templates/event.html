@@ -25,13 +25,23 @@
   </div>
   {% endif %}
   {% if streak %}
-  <div class="py-4">
+  <div class="">
     <div class="py-2">
       <h2>Current Streak</h2>
     </div>
     <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
       <div class="text-3xl text-center">
         {{ streak[1] }} 🔥
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <div class="py-2">
+      <h2>Repeat</h2>
+    </div>
+    <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
+      <div class="text-center">
+        {{ event[5] }}
       </div>
     </div>
   </div>

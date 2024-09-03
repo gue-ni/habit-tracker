@@ -129,8 +129,19 @@ def event(id):
 
 
 def random_hex_color():
-    colors = ["#ff00ff", "#ff0000", "#003366", "#4B0082"]
-    return random.choice(colors)
+    while True:
+        (r, g, b) = (
+            random.randint(0, 150),
+            random.randint(0, 150),
+            random.randint(0, 150),
+        )
+
+        hex_color = f"#{r:02x}{g:02x}{b:02x}"
+
+        # check if color is dark enough
+        brightness = 0.299 * r + 0.587 * g + 0.114 * b
+        if brightness < 120:
+            return hex_color
 
 
 @bp.route("/new", methods=["GET", "POST"])
