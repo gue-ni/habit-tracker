@@ -83,6 +83,11 @@ def get_last_five_weeks_dates():
     return [day.date() for day in days]
 
 
+@bp.route("/<int:id>/numeric")
+def numeric(id):
+    return db.get_all_measurements(id)
+
+
 @bp.route("/<int:id>", methods=["GET"])
 def event(id):
     print(id)

@@ -54,7 +54,10 @@
     {% if event[2] == "MEASURE" %}
     <div>
       <canvas id="my_chart"></canvas>
-      <script>
+      <script defer>
+	const response = await fetch('/event/{{ event[0] }}/numeric');
+        const data = await response.json();
+	console.log(data);
         const dates = ['2024-09-01', '2024-09-02', '2024-09-03', '2024-09-04', '2024-09-05'];
         const dataPoints = [12, 19, 3, 5, 2];
 
