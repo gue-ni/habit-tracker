@@ -87,7 +87,7 @@ def get_last_five_weeks_dates():
 def event(id):
     print(id)
     event = db.get_event_by_id(event_id=id, user_id=current_user.id)
-    print(event)
+    print(f"event={event}")
 
     streak = db.get_streak(event_id=id)
     # print(f"streak={streak}")

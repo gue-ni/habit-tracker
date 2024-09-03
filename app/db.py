@@ -182,7 +182,7 @@ def get_event(event_id):
 def get_event_by_id(user_id, event_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
-    query = "SELECT id, event_name, event_type, event_emoji, description, event_repeat, hex_color FROM events WHERE user_id = ? AND id = ?"
+    query = "SELECT id, event_name, event_type, event_emoji, description, event_repeat, hex_color, event_repeat_per_week FROM events WHERE user_id = ? AND id = ?"
     cur.execute(
         query,
         (

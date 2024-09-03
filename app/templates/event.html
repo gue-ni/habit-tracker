@@ -41,7 +41,11 @@
     </div>
     <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
       <div class="text-center">
-        {{ event[5] }}
+        {% if event[5] == 'WEEKLY' %}
+        {{ event[7] }} times per week
+        {% else %}
+        Daily
+        {% endif %}
       </div>
     </div>
   </div>
