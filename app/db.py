@@ -233,16 +233,9 @@ def get_all_occurences_of_event(event_id):
 
 
 def get_all_measurements(event_id):
-    con = sqlite3.connect(database)
-    cur = con.cursor()
     query = "SELECT occured_at, numeric_value FROM occurences WHERE event_id = ? AND numeric_value NOT NULL"
-    cur.execute(
-        query,
-        (event_id,),
-    )
-    result = cur.fetchall()
-    con.close()
-    return result
+    return fetchall(query, (event_id,))
+
 
 
 def get_streak(event_id):
