@@ -94,7 +94,7 @@ def event(id):
     event = db.get_event_by_id(event_id=id, user_id=current_user.id)
     if not event:
         abort(404)
-        
+
     print(f"event={event}")
 
     streak = db.get_streak(event_id=id)
@@ -228,6 +228,8 @@ def record_event(id):
         return redirect(url_for("main.dashboard"))
     else:
         event = db.get_event_by_id(event_id=id, user_id=current_user.id)
+        if not event:
+            abort(404)
         print(event)
         return render_template("record_event.html", event=event, form=form)
 

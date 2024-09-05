@@ -4,7 +4,7 @@ from app.models import User
 
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_login import LoginManager
 
 
@@ -31,11 +31,11 @@ def create_app():
 
     @app.errorhandler(404)
     def page_not_found(error):
-        return render_template('404.html'), 404
+        return render_template("error/404.html"), 404
 
     @app.errorhandler(500)
     def internal_error(error):
-        return render_template('500.html'), 500
+        return render_template("error/500.html"), 500
 
     from app.main import bp as main_bp
 
