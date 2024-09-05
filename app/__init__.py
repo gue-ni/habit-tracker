@@ -29,6 +29,14 @@ def create_app():
             (id, name, hash) = user
             return User(str(id), name)
 
+    @app.errorhandler(404)
+    def page_not_found(error):
+        return render_template('404.html'), 404
+
+    @app.errorhandler(500)
+    def internal_error(error):
+        return render_template('500.html'), 500
+
     from app.main import bp as main_bp
 
     app.register_blueprint(main_bp)

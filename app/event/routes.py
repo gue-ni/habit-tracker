@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 
 
-from flask import render_template, request, url_for, redirect
+from flask import render_template, request, url_for, redirect, abort
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, DecimalField
@@ -92,6 +92,9 @@ def numeric(id):
 def event(id):
     print(id)
     event = db.get_event_by_id(event_id=id, user_id=current_user.id)
+    if not event:
+        abort(404)
+        
     print(f"event={event}")
 
     streak = db.get_streak(event_id=id)
