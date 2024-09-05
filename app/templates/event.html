@@ -54,13 +54,13 @@
     {% if event[2] == "MEASURE" %}
     <div>
       <canvas id="my_chart"></canvas>
-      <script defer>
+      <script>
 
         function visualize(data) {
-
+          console.log({data});
         }
 
-	      fetch('/event/{{ event[0] }}/numeric')
+	      fetch("{{ url_for('event.numeric', id=event[0]) }}")
         .then(response => response.json())
         .then(data => {
           console.log(data);
