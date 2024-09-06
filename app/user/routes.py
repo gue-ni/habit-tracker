@@ -10,14 +10,11 @@ from flask import render_template, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 
 
-@bp.route("/login_old", methods=["GET", "POST"])
-def login_old():
-    print(db.get_users())
-    return "<h1>login</h1>"
-
-
 @bp.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.dashboard"))
+
     form = LoginForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -45,6 +42,9 @@ def login():
 
 @bp.route("/signup", methods=["GET", "POST"])
 def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.dashboard"))
+
     form = SignupForm()
     if form.validate_on_submit():
         username = form.username.data
