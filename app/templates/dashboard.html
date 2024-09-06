@@ -7,6 +7,9 @@
   </div>
 </div>
 <div class="p-6 font-semibold text-slate-700">
+  <div class="py-4">
+    <h2 class="text-2xl">Hello {{ user.name }}!</h2>
+  </div>
   {% if events_todo %}
   <div class="py-4">
     <h2 class="text-2xl">
@@ -40,8 +43,11 @@
       {% endfor %}
     </div>
   </div>
+  {% else %}
+  <div class="pb-4">
+    <p>All done today, well done!</p>
+  </div>
   {% endif %}
-
   {% if all_events %}
   <div class="py-4">
     <h2 class="text-2xl">
@@ -70,7 +76,6 @@
     </div>
   </div>
   {% endif %}
-
   <div class="py-2">
     <a href="{{ url_for('event.new_event') }}" class="">
       <div class="bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10">
@@ -78,7 +83,6 @@
       </div>
     </a>
   </div>
-
   <div class="py-2">
     <a href="{{ url_for('user.logout') }}" class="">
       <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10">
