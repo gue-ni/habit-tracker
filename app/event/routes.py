@@ -235,7 +235,9 @@ def record_event(id):
 
         print(f"streak={streak}")
 
-        flash("Good Job!")
+        quote = db.get_random_quote()
+
+        flash(f"{quote[0]} - {quote[1]}")
 
         return redirect(url_for("main.dashboard"))
     else:

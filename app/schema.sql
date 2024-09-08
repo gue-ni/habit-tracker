@@ -38,3 +38,24 @@ CREATE TABLE IF NOT EXISTS streaks (
   active_since TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
 );
+
+DROP TABLE quotes;
+
+CREATE TABLE IF NOT EXISTS quotes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  quote TEXT NOT NULL,
+  author TEXT NOT NULL
+);
+
+INSERT INTO quotes (quote, author) VALUES
+  ('Habits change into character.', 'Ovid'),
+  ('Good habits formed at youth make all the difference.', 'Aristotle'),
+  ('Successful people are simply those with successful habits.', 'Brian Tracy'),
+  ("Rome wasn't built in a day.", 'Unknown'),
+  ("There is no elevator to success, you have to take the stairs.", "Zig Ziglar"),
+  ("Our life is what our thoughts make it.", "Marcus Aurelius"),
+  ("Each day provides its own gifts.", "Marcus Aurelius"),
+  ("We become what we repeatedly do.", "Sean Covey"),
+  ("A nail is driven out by another nail; habit is overcome by habit.", "Erasmus"),
+  ("Habit is a cable; we weave a thread of it each day, and at last, we cannot break it.", "Horace Mann"),
+  ("A man should be upright, not be kept upright.", "Marcus Aurelius");

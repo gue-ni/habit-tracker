@@ -310,3 +310,8 @@ def get_all_streaks_for_user(user_id):
       e.user_id = ?
     """
     return fetchall(query, (user_id,))
+
+
+def get_random_quote():
+    query = "SELECT quote, author FROM quotes ORDER BY RANDOM() LIMIT 1"
+    return fetchone(query)
