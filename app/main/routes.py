@@ -2,7 +2,7 @@ from collections import defaultdict
 from datetime import date, datetime
 
 
-from flask import render_template, redirect, url_for, current_app
+from flask import render_template, redirect, url_for, current_app, flash, request
 from flask_login import login_required, current_user
 
 
@@ -30,8 +30,12 @@ def get_todos(user_id):
     todo += todo_daily
 
     todo_week = db.get_todo_weekly_events(user_id)
-    # print(f"weekly={todo_week}")
+
+    current_date = db.get_current_date()
+    todo_week = list(filter(lambda e: e[11] != current_date and e[8] < e[7], todo_week))
+
     todo += todo_week
+
     return todo
 
 
@@ -108,6 +112,11 @@ def compute_streak(event_id):
 def dashboard():
     streak_to_recompute = db.get_all_streaks_for_user(current_user.id)
     print(streak_to_recompute)
+
+    p = request.args.get("p")
+
+    # if p:
+    #    flash("Good Job!")
 
     for streak in streak_to_recompute:
         event_id = streak[0]

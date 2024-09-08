@@ -6,7 +6,7 @@ from app import db
 
 import bcrypt
 
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, abort
 from flask_login import login_user, login_required, logout_user, current_user
 
 
@@ -57,7 +57,9 @@ def signup():
         else:
             salt = bcrypt.gensalt()
             hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
-            db.insert_user(username, hashed_password)
+            ok = db.insert_user(username, hashed_password)
+            if not ok:
+                abort(500)
             flash("You have successfully signed up! Please log in.", "success")
             return redirect(url_for("user.login"))
 

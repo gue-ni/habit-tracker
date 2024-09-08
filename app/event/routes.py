@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 
 
-from flask import render_template, request, url_for, redirect, abort
+from flask import render_template, request, url_for, redirect, abort, flash
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, DecimalField
@@ -184,7 +184,7 @@ def new_event():
 
         hex_color = random_hex_color()
 
-        db.insert_event(
+        ok = db.insert_event(
             event_name=event_name,
             owner=current_user.id,
             event_type=event_type,
@@ -194,6 +194,9 @@ def new_event():
             event_description=event_description,
             event_repeat_per_week=event_repeat_per_week,
         )
+
+        if not ok:
+            abort(500)
 
         return redirect(url_for("main.dashboard"))
 
@@ -208,23 +211,32 @@ def record_event(id):
     if request.method == "POST":
         numeric_value = form.numeric_value.data
         print(numeric_value)
+        ok = False
+
         if numeric_value:
             numeric_value = float(numeric_value)
-            db.insert_measurement_of_event(event_id=id, value=numeric_value)
+            ok = db.insert_measurement_of_event(event_id=id, value=numeric_value)
         else:
-            db.insert_occurence_of_event(event_id=id)
+            ok = db.insert_occurence_of_event(event_id=id)
+
+        if not ok:
+            abort(500)
 
         streak = db.get_streak(event_id=id)
         if not streak:
             print("insert new streak")
-            db.insert_streak(event_id=id)
+            ok = db.insert_streak(event_id=id)
         else:
             print(f"increment streak")
-            db.update_streak(event_id=id, streak=streak[1] + 1)
+            ok = db.update_streak(event_id=id, streak=streak[1] + 1)
 
-        # TODO: recalculate streak
+        if not ok:
+            abort(500)
 
         print(f"streak={streak}")
+
+        flash("Good Job!")
+
         return redirect(url_for("main.dashboard"))
     else:
         event = db.get_event_by_id(event_id=id, user_id=current_user.id)
