@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import date, datetime
+import datetime
 
 
 from flask import render_template, redirect, url_for, current_app, flash, request
@@ -41,9 +41,9 @@ def get_todos(user_id):
 
 # this should also be called after recording an occurence
 def compute_streak(event_id):
-    print(f"compute_streak {event_id}")
     event = db.get_event(event_id)
-    repeat = event[5]  # TODO: this might not be correct
+    print(f"compute_streak {event[1]}")
+    repeat = event[5]
 
     occurences = db.get_all_occurences(event_id=event_id)
     occurences.reverse()
@@ -51,25 +51,38 @@ def compute_streak(event_id):
     if len(occurences) == 0:
         return 0
 
-    today = datetime.now().date()
+    today = datetime.datetime.now().date()
 
     dates = [
-        datetime.strptime(occurence[1], "%Y-%m-%d").date() for occurence in occurences
+        datetime.datetime.strptime(occurence[1], "%Y-%m-%d").date() for occurence in occurences
     ]
 
-    if len(dates) == 1 and dates[0] == today:
+    if dates[0] == today and len(dates) == 1:
         return 1
 
     streak = 0
 
     if repeat == "DAILY":
+
+        yesterday = (today - datetime.timedelta(days=1))
+
+        print(f"today={today}, yesterday={yesterday}")
+        print(dates)
+
+        if not (dates[0] == today or dates[0] == yesterday):
+            print("early return")
+            streak = 0
+            return streak
+
         streak = 1
 
         for i in range(len(dates) - 1):
             current_date = dates[i]
             previous_date = dates[i + 1]
-
             difference = current_date - previous_date
+
+            print("for loop", current_date, previous_date, difference)
+
             if difference.days == 1:
                 streak = streak + 1
             else:
@@ -86,7 +99,7 @@ def compute_streak(event_id):
 
         # print(event_counts)
 
-        current_year, current_week, _ = datetime.now().isocalendar()
+        current_year, current_week, _ = datetime.datetime.now().isocalendar()
 
         year, week = current_year, current_week
 
@@ -112,11 +125,6 @@ def compute_streak(event_id):
 def dashboard():
     streak_to_recompute = db.get_all_streaks_for_user(current_user.id)
     print(streak_to_recompute)
-
-    p = request.args.get("p")
-
-    # if p:
-    #    flash("Good Job!")
 
     for streak in streak_to_recompute:
         event_id = streak[0]
