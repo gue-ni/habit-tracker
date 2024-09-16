@@ -8,8 +8,7 @@ from flask_login import login_required, current_user
 
 from app.main import bp
 from app import db
-
-# import app.db as db
+from app.models import User, AppException
 
 
 @bp.route("/")

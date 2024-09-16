@@ -1,6 +1,6 @@
 from app.user import bp
 from app.user.forms import SignupForm, LoginForm
-from app.models import User
+from app.models import User, AppException
 from app import db
 
 
@@ -59,7 +59,8 @@ def signup():
             hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
             ok = db.insert_user(username, hashed_password)
             if not ok:
-                abort(500)
+                raise AppException("Could not insert user", 400)
+
             flash("You have successfully signed up! Please log in.", "success")
             return redirect(url_for("user.login"))
 
@@ -69,8 +70,6 @@ def signup():
 @bp.route("/logout")
 @login_required
 def logout():
-    print(f"logout {current_user}")
     logout_user()
-    # session.clear()
     flash("You have been logged out.", "info")
     return redirect(url_for("user.login"))

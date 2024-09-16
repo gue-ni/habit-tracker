@@ -1,5 +1,5 @@
 from app import db
-from app.models import User
+from app.models import User, AppException
 
 
 import os
@@ -36,6 +36,16 @@ def create_app():
     @app.errorhandler(500)
     def internal_error(error):
         return render_template("error/500.html"), 500
+
+    @app.internal_error(AppException)
+    def handle_app_exception(error):
+        response = {
+            'error': error.args[0],
+            'status_code': error.status_code
+        }
+        
+        return jsonify(response), 400
+
 
     from app.main import bp as main_bp
 
