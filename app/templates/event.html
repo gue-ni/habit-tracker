@@ -118,7 +118,11 @@
       </div>
       <div class="grid grid-cols-7 gap-2 text-center">
         {% for day in calendar %}
-        <div class="p-2 {% if day[1] %} bg-green-200 {% else %} bg-gray-200 {% endif %} rounded">{{ day[0] }}</div>
+            <div class="p-2 {% if day[1] %} bg-green-200 {% else %} bg-gray-200 {% endif %} rounded">
+              <a href="{{ url_for('event.record_event', id=event[0], date=day[2]) }}">
+              {{ day[0] }}
+              </a>
+            </div>
         {% endfor %}
       </div>
     </div>

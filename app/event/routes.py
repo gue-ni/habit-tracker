@@ -125,7 +125,7 @@ def event(id):
                 calendar.append((day, False))
 
         calendar.reverse()
-        calendar = [(day.strftime("%d"), v) for (day, v) in calendar]
+        calendar = [(day.strftime("%d"), v, day) for (day, v) in calendar]
 
     return render_template(
         "event.html",
@@ -207,17 +207,19 @@ def new_event():
 @bp.route("/<int:id>/record", methods=["GET", "POST"])
 @login_required
 def record_event(id):
+    date = request.args.get("date", db.get_current_date())
     form = RecordEventForm()
+    
     if request.method == "POST":
         numeric_value = form.numeric_value.data
-        print(numeric_value)
+
         ok = False
 
         if numeric_value:
             numeric_value = float(numeric_value)
-            ok = db.insert_measurement_of_event(event_id=id, value=numeric_value)
+            ok = db.insert_measurement_of_event(event_id=id, value=numeric_value, date=date)
         else:
-            ok = db.insert_occurence_of_event(event_id=id)
+            ok = db.insert_occurence_of_event(event_id=id, date=date)
 
         if not ok:
             abort(500)
@@ -245,7 +247,7 @@ def record_event(id):
         if not event:
             abort(404)
         print(event)
-        return render_template("record_event.html", event=event, form=form)
+        return render_template("record_event.html", event=event, form=form, current_date=date)
 
 
 @bp.route("/<int:id>/delete", methods=["POST"])

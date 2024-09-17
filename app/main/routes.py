@@ -38,6 +38,14 @@ def get_todos(user_id):
     return todo
 
 
+def compute_daily_streak(dates, current_date):
+    pass
+
+
+def compute_weekly_streak(dates, current_date, target_weekly_repeat):
+    pass
+
+
 # this should also be called after recording an occurence
 def compute_streak(event_id):
     event = db.get_event(event_id)
