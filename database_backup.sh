@@ -17,6 +17,6 @@ mkdir -p $backup_directory
 
 
 sqlite3 $primary_database ".backup '$backup_database'"
-sqlite3 $primary_database .dump   > $backup_dump
-sqlite3 $primary_database .schema > $backup_schema
+sqlite3 $primary_database ".dump"   > $backup_dump
+sqlite3 $primary_database ".schema" > $backup_schema
 

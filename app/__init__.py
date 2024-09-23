@@ -4,7 +4,7 @@ from app.models import User, AppException
 
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_login import LoginManager
 
 
@@ -37,13 +37,13 @@ def create_app():
     def internal_error(error):
         return render_template("error/500.html"), 500
 
-    @app.internal_error(AppException)
+    @app.errorhandler(AppException)
     def handle_app_exception(error):
         response = {
             'error': error.args[0],
             'status_code': error.status_code
         }
-        
+
         return jsonify(response), 400
 
 
