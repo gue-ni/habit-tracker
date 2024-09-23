@@ -39,13 +39,10 @@ def create_app():
 
     @app.errorhandler(AppException)
     def handle_app_exception(error):
-        response = {
-            'error': error.args[0],
-            'status_code': error.status_code
-        }
-
-        return jsonify(response), 400
-
+        return (
+            render_template("error/error.html", error_message=error.args[0]),
+            error.status_code,
+        )
 
     from app.main import bp as main_bp
 

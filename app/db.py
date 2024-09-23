@@ -203,11 +203,19 @@ def get_event_by_id(user_id, event_id):
 
 def insert_occurence_of_event(event_id, date):
     query = "INSERT INTO occurences (event_id, occured_at) VALUES (?, ?)"
-    return execute(query, (event_id, date,))
+    return execute(
+        query,
+        (
+            event_id,
+            date,
+        ),
+    )
 
 
 def insert_measurement_of_event(event_id, value, date):
-    query = "INSERT INTO occurences (event_id, numeric_value) VALUES (?, ?, ?)"
+    query = (
+        "INSERT INTO occurences (event_id, numeric_value, occured_at) VALUES (?, ?, ?)"
+    )
     return execute(
         query,
         (
@@ -219,7 +227,7 @@ def insert_measurement_of_event(event_id, value, date):
 
 
 def get_all_occurences_of_event(event_id):
-    query = "SELECT id, occured_at FROM occurences WHERE event_id = ?"
+    query = "SELECT id, occured_at, numeric_value FROM occurences WHERE event_id = ?"
     return fetchall(
         query,
         (event_id,),

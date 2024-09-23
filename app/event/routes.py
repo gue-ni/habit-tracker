@@ -90,47 +90,28 @@ def numeric(id):
 
 @bp.route("/<int:id>", methods=["GET"])
 def event(id):
-    print(id)
     event = db.get_event_by_id(event_id=id, user_id=current_user.id)
     if not event:
         abort(404)
 
-    print(f"event={event}")
-
     streak = db.get_streak(event_id=id)
-    # print(f"streak={streak}")
 
-    measurements = None
-    occurences = None
-    calendar = None
+    occurences = db.get_all_occurences_of_event(event_id=id)
+    occurences = [
+        datetime.strptime(occurence[1], "%Y-%m-%d").date() for occurence in occurences
+    ]
 
-    if event[2] == EventType.MEASURE.value:
-        measurements = db.get_all_measurements(event_id=id)
-        print(measurements)
-    else:
-        occurences = db.get_all_occurences_of_event(event_id=id)
-        occurences = [
-            datetime.strptime(occurence[1], "%Y-%m-%d").date()
-            for occurence in occurences
-        ]
+    last_five_weeks = get_last_five_weeks_dates()
 
-        last_five_weeks = get_last_five_weeks_dates()
-
-        calendar = []
-
-        for day in last_five_weeks:
-            if day in occurences:
-                calendar.append((day, True))
-            else:
-                calendar.append((day, False))
-
-        calendar.reverse()
-        calendar = [(day.strftime("%d"), v, day) for (day, v) in calendar]
+    calendar = [
+        ((day, True) if day in occurences else (day, False)) for day in last_five_weeks
+    ]
+    calendar.reverse()
+    calendar = [(day.strftime("%d"), v, day) for (day, v) in calendar]
 
     return render_template(
         "event.html",
         event=event,
-        occurences=occurences,
         streak=streak,
         calendar=calendar,
     )
@@ -209,7 +190,9 @@ def new_event():
 def record_event(id):
     date = request.args.get("date", db.get_current_date())
     form = RecordEventForm()
-    
+
+    print(f"date={date}")
+
     if request.method == "POST":
         numeric_value = form.numeric_value.data
 
@@ -217,7 +200,9 @@ def record_event(id):
 
         if numeric_value:
             numeric_value = float(numeric_value)
-            ok = db.insert_measurement_of_event(event_id=id, value=numeric_value, date=date)
+            ok = db.insert_measurement_of_event(
+                event_id=id, value=numeric_value, date=date
+            )
         else:
             ok = db.insert_occurence_of_event(event_id=id, date=date)
 
@@ -247,7 +232,9 @@ def record_event(id):
         if not event:
             abort(404)
         print(event)
-        return render_template("record_event.html", event=event, form=form, current_date=date)
+        return render_template(
+            "record_event.html", event=event, form=form, current_date=date
+        )
 
 
 @bp.route("/<int:id>/delete", methods=["POST"])
