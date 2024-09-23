@@ -37,7 +37,7 @@ def create_app():
     def internal_error(error):
         return render_template("error/500.html"), 500
 
-    @app.internal_error(AppException)
+    @app.errorhandler(AppException)
     def handle_app_exception(error):
         response = {
             'error': error.args[0],
