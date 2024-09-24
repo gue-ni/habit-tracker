@@ -41,11 +41,14 @@ def compute_daily_streak(dates, current_date):
     pass
 
 
+def compute_quit_streak(dates, current_date):
+    pass
+
+
 def compute_weekly_streak(dates, current_date, target_weekly_repeat):
     pass
 
 
-# this should also be called after recording an occurence
 def compute_streak(event_id):
     event = db.get_event(event_id)
     # print(f"compute_streak {event[1]}")
@@ -73,11 +76,11 @@ def compute_streak(event_id):
 
         yesterday = today - datetime.timedelta(days=1)
 
-        print(f"today={today}, yesterday={yesterday}")
-        print(dates)
+        # print(f"today={today}, yesterday={yesterday}")
+        # print(dates)
 
         if not (dates[0] == today or dates[0] == yesterday):
-            print("early return")
+            # print("early return")
             streak = 0
             return streak
 
@@ -88,7 +91,7 @@ def compute_streak(event_id):
             previous_date = dates[i + 1]
             difference = current_date - previous_date
 
-            print("for loop", current_date, previous_date, difference)
+            # print("for loop", current_date, previous_date, difference)
 
             if difference.days == 1:
                 streak = streak + 1
@@ -136,7 +139,7 @@ def compute_all_streaks(user_id):
         old_count = streak[2]
         new_count = compute_streak(event_id=event_id)
         print(f"{streak}, old_count={old_count}, new_count={new_count}")
-        # db.update_streak(event_id=event_id, streak=new_count)
+        db.update_streak(event_id=event_id, streak=new_count)
 
 
 @bp.route("/dashboard")
@@ -145,11 +148,10 @@ def dashboard():
 
     compute_all_streaks(current_user.id)
 
-    all_events = db.get_all_events(current_user.id)
+    events = db.get_all_events(current_user.id)
 
     todos = get_todos(current_user.id)
-    # todos = []
 
     return render_template(
-        "dashboard.html", user=current_user, events_todo=todos, all_events=all_events
+        "dashboard.html", user=current_user, events_todo=todos, all_events=events
     )

@@ -26,6 +26,18 @@
       </div>
     </div>
     {% endif %}
+    {% if not is_today %}
+    <div class="py-4">
+      <div class="py-2">
+        <h2>Date:</h2>
+      </div>
+      <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
+        <p class="text-center">
+          {{ date }}
+        </p>
+      </div>
+    </div>
+    {% endif %}
     <div class="py-4">
       <div class="py-2">
         <h2>Repeat</h2>

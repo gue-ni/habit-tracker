@@ -247,11 +247,14 @@ def get_streak(event_id):
     )
 
 
-def insert_streak(event_id):
-    query = "INSERT INTO streaks (event_id, streak) VALUES (?, 1)"
+def insert_streak(event_id, streak=1):
+    query = "INSERT INTO streaks (event_id, streak) VALUES (?, ?)"
     return execute(
         query,
-        (event_id,),
+        (
+            event_id,
+            streak,
+        ),
     )
 
 

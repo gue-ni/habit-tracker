@@ -188,10 +188,9 @@ def new_event():
 @bp.route("/<int:id>/record", methods=["GET", "POST"])
 @login_required
 def record_event(id):
-    date = request.args.get("date", db.get_current_date())
+    current_date = db.get_current_date()
+    date = request.args.get("date", current_date)
     form = RecordEventForm()
-
-    print(f"date={date}")
 
     if request.method == "POST":
         numeric_value = form.numeric_value.data
@@ -211,19 +210,14 @@ def record_event(id):
 
         streak = db.get_streak(event_id=id)
         if not streak:
-            print("insert new streak")
             ok = db.insert_streak(event_id=id)
         else:
-            print(f"increment streak")
             ok = db.update_streak(event_id=id, streak=streak[1] + 1)
 
         if not ok:
             abort(500)
 
-        print(f"streak={streak}")
-
         quote = db.get_random_quote()
-
         flash(f"{quote[0]} - {quote[1]}")
 
         return redirect(url_for("main.dashboard"))
@@ -231,15 +225,18 @@ def record_event(id):
         event = db.get_event_by_id(event_id=id, user_id=current_user.id)
         if not event:
             abort(404)
-        print(event)
+
         return render_template(
-            "record_event.html", event=event, form=form, current_date=date
+            "record_event.html",
+            event=event,
+            form=form,
+            date=date,
+            is_today=(date == current_date),
         )
 
 
 @bp.route("/<int:id>/delete", methods=["POST"])
 @login_required
 def delete_event(id):
-    print(f"delete {id}")
     db.delete_event(id)
     return redirect(url_for("main.dashboard"))
