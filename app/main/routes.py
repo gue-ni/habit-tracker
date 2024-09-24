@@ -9,6 +9,7 @@ from flask_login import login_required, current_user
 from app.main import bp
 from app import db
 from app.models import User, AppException
+from app.utils import get_current_date
 
 
 @bp.route("/")
@@ -28,7 +29,7 @@ def get_todos(user_id):
     todo_daily = db.get_todo_daily_events(user_id)
     todo += todo_daily
 
-    current_date = db.get_current_date()
+    current_date = get_current_date()
     todo_week = db.get_todo_weekly_events(user_id)
     todo_week = list(filter(lambda e: e[11] != current_date, todo_week))
 

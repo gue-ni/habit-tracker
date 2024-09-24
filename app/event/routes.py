@@ -1,9 +1,10 @@
 from app import db
 from app.event import bp
+from app.utils import datestring_to_obj, obj_to_datestring, get_current_date
 
 
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from enum import Enum
 
 
@@ -97,23 +98,24 @@ def event(id):
     streak = db.get_streak(event_id=id)
 
     occurences = db.get_all_occurences_of_event(event_id=id)
-    occurences = [
-        datetime.strptime(occurence[1], "%Y-%m-%d").date() for occurence in occurences
-    ]
+    occurences = [datestring_to_obj(occurence[1]) for occurence in occurences]
 
     last_five_weeks = get_last_five_weeks_dates()
 
+    today = date.today()
+
     calendar = [
-        ((day, True) if day in occurences else (day, False)) for day in last_five_weeks
+        (day.strftime("%d"), day in occurences, obj_to_datestring(day), day <= today)
+        for day in last_five_weeks
     ]
     calendar.reverse()
-    calendar = [(day.strftime("%d"), v, day) for (day, v) in calendar]
 
     return render_template(
         "event.html",
         event=event,
         streak=streak,
         calendar=calendar,
+        current_date=get_current_date(),
     )
 
 
@@ -188,7 +190,7 @@ def new_event():
 @bp.route("/<int:id>/record", methods=["GET", "POST"])
 @login_required
 def record_event(id):
-    current_date = db.get_current_date()
+    current_date = get_current_date()
     date = request.args.get("date", current_date)
     form = RecordEventForm()
 

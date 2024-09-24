@@ -57,48 +57,48 @@
       <script>
 
         function visualize(data) {
-          console.log({data});
+          console.log({ data });
 
           const dates = data.map((d) => d[0]);
-        const dataPoints = data.map((d) => d[1]);
+          const dataPoints = data.map((d) => d[1]);
 
-        const chart = new Chart('my_chart', {
-          type: 'line',
-          data: {
-            labels: dates,
-            datasets: [{
-              label: '',
-              data: dataPoints,
-              borderWidth: 1
-            }]
-          },
-          options: {
-            scales: {
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'day',
-                  tooltipFormat: 'MMM dd, yyyy',
-                  displayFormats: {
-                    day: 'MMM dd'
-                  }
+          const chart = new Chart('my_chart', {
+            type: 'line',
+            data: {
+              labels: dates,
+              datasets: [{
+                label: '',
+                data: dataPoints,
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                x: {
+                  type: 'time',
+                  time: {
+                    unit: 'day',
+                    tooltipFormat: 'MMM dd, yyyy',
+                    displayFormats: {
+                      day: 'MMM dd'
+                    }
+                  },
                 },
-              },
-              y: {
-                beginAtZero: false
+                y: {
+                  beginAtZero: false
+                }
               }
             }
-          }
-        });
+          });
         }
 
-	      fetch("{{ url_for('event.numeric', id=event[0]) }}")
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          visualize(data);
-        })
-        .catch(error => console.error('Error fetching data:', error));
+        fetch("{{ url_for('event.numeric', id=event[0]) }}")
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            visualize(data);
+          })
+          .catch(error => console.error('Error fetching data:', error));
 
 
 
@@ -106,7 +106,6 @@
     </div>
     {% endif %}
     <div class="max-w-md mx-auto p-4 bg-white rounded-lg">
-      <!-- Day Names -->
       <div class="grid grid-cols-7 gap-2 text-center text-gray-500 mb-2">
         <div>Mon</div>
         <div>Tue</div>
@@ -118,11 +117,18 @@
       </div>
       <div class="grid grid-cols-7 gap-2 text-center">
         {% for day in calendar %}
-            <div class="p-2 {% if day[1] %} bg-green-200 {% else %} bg-gray-200 {% endif %} rounded">
-              <a href="{{ url_for('event.record_event', id=event[0], date=day[2]) }}">
-              {{ day[0] }}
-              </a>
-            </div>
+        <div
+          class="p-2 {% if day[1] %} bg-green-200 {% else %} bg-gray-200 {% endif %} rounded {% if day[2] == current_date %}border-2 border-slate-900{% endif %}">
+          {% if day[3] %}
+          <a href="{{ url_for('event.record_event', id=event[0], date=day[2]) }}">
+            {{ day[0] }}
+          </a>
+          {% else %}
+          <span>
+            {{ day[0] }}
+          </span>
+          {% endif %}
+        </div>
         {% endfor %}
       </div>
     </div>
