@@ -117,15 +117,20 @@
       </div>
       <div class="grid grid-cols-7 gap-2 text-center">
         {% for day in calendar %}
-        <div
-          class="p-2 {% if day[1] %} bg-green-200 {% else %} bg-gray-200 {% endif %} rounded {% if day[2] == current_date %}border-2 border-slate-900{% endif %}">
+        <div>
           {% if day[3] %}
-          <a href="{{ url_for('event.record_event', id=event[0], date=day[2]) }}" class="text-center">
-            {{ day[0] }}
+          <a href="{{ url_for('event.record_event', id=event[0], date=day[2]) }}">
+            <div
+              class="p-2 {% if day[1] %}bg-green-200{% else %} bg-gray-200 {% endif %} rounded {% if day[2] == current_date %}border-2 border-slate-900{% endif %}">
+              {{ day[0] }}
+            </div>
           </a>
           {% else %}
           <span>
-            {{ day[0] }}
+            <div
+              class="p-2 {% if day[1] %}bg-green-200{% else %} bg-gray-200 {% endif %} rounded {% if day[2] == current_date %}border-2 border-slate-900{% endif %}">
+              {{ day[0] }}
+            </div>
           </span>
           {% endif %}
         </div>
