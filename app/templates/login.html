@@ -35,7 +35,7 @@
       {{ form.remember_me(class_="p-4 rounded-lg border border-slate-900/10",) }}
     </div>
     <div class="py-4">
-      {{ form.submit(class_="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10")
+      {{ form.submit(class_="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90")
       }}
     </div>
   </form>
@@ -44,7 +44,7 @@
       No account yet?
     </p>
     <a href="{{ url_for('user.signup') }}" class="">
-      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10">
+      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90">
         Signup
       </div>
     </a>
