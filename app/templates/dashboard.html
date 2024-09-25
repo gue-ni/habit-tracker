@@ -31,32 +31,30 @@
       To Do
     </h2>
   </div>
-  <div class="">
-    <div>
-      {% for event in events_todo %}
-      <div class="pb-4">
-        <a href="{{ url_for('event.record_event', id=event[0]) }}" class="">
-          <div class="p-4 w-full text-white rounded-lg border border-slate-900/10 flex justify-between"
-            style="background-color: {{ event[6] }}">
-            <div>
-              <span>
-                {{ event[3] }}
-              </span>
-              <span>
-                {{ event[1] }}
-              </span>
-            </div>
-            <div>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 4L16 12L8 20" stroke="white" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </div>
+  <div>
+    {% for event in events_todo %}
+    <div class="pb-4">
+      <a href="{{ url_for('event.record_event', id=event[0]) }}" class="">
+        <div class="p-4 w-full text-white rounded-lg border border-slate-900/10 flex justify-between shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90"
+          style="background-color: {{ event[6] }}">
+          <div>
+            <span>
+              {{ event[3] }}
+            </span>
+            <span>
+              {{ event[1] }}
+            </span>
           </div>
-        </a>
-      </div>
-      {% endfor %}
+          <div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 4L16 12L8 20" stroke="white" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </a>
     </div>
+    {% endfor %}
   </div>
   {% else %}
   <div class="pb-4">
@@ -70,7 +68,7 @@
     </h2>
   </div>
   <div class="py-4">
-    <div class="bg-white px-4 rounded-lg border border-slate-900/10">
+    <div class="bg-white px-4 rounded-lg border border-slate-900/10 shadow-md">
       {% for event in all_events %}
       <div>
         <a href="{{ url_for('event.event', id=event[0]) }}">
@@ -93,14 +91,18 @@
   {% endif %}
   <div class="py-2">
     <a href="{{ url_for('event.new_event') }}" class="">
-      <div class="bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10">
+      <div class="bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md
+        transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90
+      ">
         Create New Habit
       </div>
     </a>
   </div>
   <div class="py-2">
     <a href="{{ url_for('user.logout') }}" class="">
-      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10">
+      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10
+        transition duration-200 ease-in-out shadow-md transform active:bg-slate-100 active:scale-90
+      ">
         Logout
       </div>
     </a>
