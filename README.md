@@ -8,7 +8,7 @@ On the index page, there is a simple input UI for recording an event, picked
 from a list of previous event types. Every event type has it's own page, where
 there are a number of different statistics that provide insight into it.
 
-## Build
+## How to run
 
 ### Development
 
@@ -17,10 +17,13 @@ export FLASK_APP=app
 flask run --debug
 ```
 
-### Deployment
+### Production
 
 ```bash
 ./init_db.sh
+# or
+python init_db.py
+
 docker compose build
 docker compose up -d
 ```
