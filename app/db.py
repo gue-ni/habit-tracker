@@ -227,7 +227,7 @@ def insert_measurement_of_event(event_id, value, date):
 
 
 def get_all_occurences_of_event(event_id):
-    query = "SELECT id, occured_at, numeric_value FROM occurences WHERE event_id = ?"
+    query = "SELECT id, occured_at, numeric_value FROM occurences WHERE event_id = ? ORDER BY occured_at"
     return fetchall(
         query,
         (event_id,),
@@ -235,7 +235,7 @@ def get_all_occurences_of_event(event_id):
 
 
 def get_all_measurements(event_id):
-    query = "SELECT occured_at, numeric_value FROM occurences WHERE event_id = ? AND numeric_value NOT NULL"
+    query = "SELECT occured_at, numeric_value FROM occurences WHERE event_id = ? AND numeric_value NOT NULL ORDER BY occured_at"
     return fetchall(query, (event_id,))
 
 
@@ -278,7 +278,7 @@ def delete_streak(event_id):
 
 
 def get_all_occurances_between(event_id, start_date, end_date):
-    query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ? AND DATE(?) <= o.occured_at AND o.occured_at < DATE(?)"
+    query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ? AND DATE(?) <= o.occured_at AND o.occured_at < DATE(?) ORDER BY o.occured_at"
     return fetchall(
         query,
         (
@@ -291,12 +291,12 @@ def get_all_occurances_between(event_id, start_date, end_date):
 
 
 def get_all_occurances(event_id):
-    query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ?"
+    query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ? ORDER BY o.occured_at"
     return fetchall(query, (event_id,))
 
 
 def get_all_occurences(event_id):
-    query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ?"
+    query = "SELECT o.event_id, o.occured_at FROM occurences o WHERE o.event_id = ? ORDER BY o.occured_at"
     return fetchall(query, (event_id,))
 
 
