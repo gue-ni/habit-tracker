@@ -73,3 +73,10 @@ def logout():
     logout_user()
     flash("You have been logged out.", "info")
     return redirect(url_for("main.index"))
+
+
+@bp.route("/profile")
+@login_required
+def profile():
+    user = db.get_user_by_id(current_user.id)
+    return render_template("profile.html", user=user)
