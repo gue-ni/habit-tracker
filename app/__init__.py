@@ -26,7 +26,7 @@ def create_app():
         if not user:
             return None
         else:
-            (id, name, hash) = user
+            (id, name, hash, _) = user
             return User(str(id), name)
 
     @app.errorhandler(404)

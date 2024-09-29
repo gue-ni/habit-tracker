@@ -80,3 +80,11 @@ def logout():
 def profile():
     user = db.get_user_by_id(current_user.id)
     return render_template("profile.html", user=user)
+
+
+@bp.route("/delete", methods=["POST"])
+@login_required
+def delete():
+    logout_user()
+    db.delete_user(user_id=current_user.id)
+    return redirect(url_for("main.index"))
