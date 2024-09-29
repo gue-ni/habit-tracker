@@ -85,6 +85,6 @@ def profile():
 @bp.route("/delete", methods=["POST"])
 @login_required
 def delete():
-    logout_user()
     db.delete_user(user_id=current_user.id)
+    logout_user()
     return redirect(url_for("main.index"))
