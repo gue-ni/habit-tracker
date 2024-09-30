@@ -24,7 +24,6 @@ def login():
 
         if not user:
             flash("Unknown username.", "danger")
-            return render_template("login.html", form=form)
 
         else:
             (id, name, hashed_password) = user
@@ -38,6 +37,9 @@ def login():
             else:
                 flash("Invalid username or password.", "danger")
                 return render_template("login.html", form=form), 400
+
+    
+    return render_template("login.html", form=form)
 
 @bp.route("/signup", methods=["GET", "POST"])
 def signup():
