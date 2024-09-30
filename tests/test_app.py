@@ -43,4 +43,15 @@ def test_signup(client):
     })
     assert response.status_code == 200
 
-    
+def test_login(client):
+    response = client.post("/user/login", data={
+        "username": "Max",
+        "password": "MyPassword"
+    })
+    assert response.status_code == 200
+
+    response = client.post("/user/login", data={
+        "username": "Max",
+        "password": "Incorrect"
+    })
+    assert response.status_code == 400
