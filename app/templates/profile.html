@@ -1,9 +1,61 @@
 {% extends "layout.html" %}
 {% block title %}Profile{% endblock %}
 {% block content %}
-<div class="border-y border-slate-900/10">
-  <div class="bg-white py-4 px-6 flex items-center relative">
-    <h1 class="text-2xl font-semibold mx-auto text-slate-700">Profile</h1>
+<div>
+  <div class="border-y border-slate-900/10">
+    <div class="bg-white py-4 px-6 flex items-center relative">
+      <a href="{{ url_for('main.dashboard') }}"
+        class="absolute left-6 text-white hover:text-gray-200 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="black">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </a>
+      <h1 class="text-2xl font-semibold mx-auto text-slate-700">Profile</h1>
+    </div>
+  </div>
+  <div class="p-6 font-semibold text-slate-700">
+    <div class="py-2">
+      <div class="py-2">
+        <h2>Username</h2>
+      </div>
+      <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
+        <div class="text-xl text-center">
+          {{ user[1] }}
+        </div>
+      </div>
+    </div>
+    <!--
+    <div class="py-2">
+      <div class="py-2">
+        <h2>User Type</h2>
+      </div>
+      <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
+        <div class="text-xl text-center">
+          {{ 'Admin' if user[0] == 1 else 'Not Admin'}}
+        </div>
+      </div>
+    </div>
+    -->
+    <div class="py-2">
+      <div class="py-2">
+        <h2>Joined</h2>
+      </div>
+      <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
+        <div class="text-xl text-center">
+          {{ user[3] }}
+        </div>
+      </div>
+    </div>
+    <div class="py-6">
+      <div class="py-2">
+        <h2>This action cannot be reversed!</h2>
+      </div>
+      <form action="{{ url_for('user.delete')}}" method="post">
+        <button type="submit" onclick="confirmSubmit(event)"
+          class="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90">Delete
+          Account</button>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}

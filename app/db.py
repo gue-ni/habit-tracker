@@ -42,14 +42,17 @@ def fetchone(query, params=()):
 def execute(query, params=()):
     con = None
     try:
+        print(params)
         con = sqlite3.connect(database)
         cur = con.cursor()
         cur.execute(query, params)
         con.commit()
+        print("cool")
         return True
     except Exception as e:
         print(f"An error occured: {e}")
     finally:
+
         if con:
             con.close()
 
@@ -73,9 +76,14 @@ def get_current_date():
     return today.strftime("%Y-%m-%d")
 
 
+def delete_user(user_id):
+    query = "DELETE FROM users WHERE id = ?"
+    return execute(query, (user_id,))
+
+
 def insert_user(username, password):
-    query = "INSERT INTO users (name,password) VALUES (?,?)"
-    execute(query, (username, password))
+    query = "INSERT INTO users (name, password) VALUES (?,?)"
+    return execute(query, (username, password))
 
 
 def get_users():
@@ -89,7 +97,7 @@ def get_user_by_name(username):
 
 
 def get_user_by_id(id):
-    query = "SELECT id, name, password FROM users WHERE id = ?"
+    query = "SELECT id, name, password, joined FROM users WHERE id = ?"
     return fetchone(query, (id,))
 
 
