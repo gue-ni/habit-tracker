@@ -34,3 +34,13 @@ def runner(app):
 def test_index(client):
     response = client.get('/')
     assert response.status_code == 200
+
+
+def test_signup(client):
+    response = client.post("/user/signup", data={
+        "username": "Max",
+        "password": "MyPassword"
+    })
+    assert response.status_code == 200
+
+    
