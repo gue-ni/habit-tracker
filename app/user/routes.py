@@ -36,6 +36,7 @@ def login():
                 return redirect(url_for("main.dashboard"))
             else:
                 flash("Invalid username or password.", "danger")
+                return render_template("login.html", form=form), 400
 
     return render_template("login.html", form=form)
 
