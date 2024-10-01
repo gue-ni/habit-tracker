@@ -14,7 +14,7 @@ def create_app():
     secret_key = os.getenv("SECRET_KEY", "change-this")
     app.config["SECRET_KEY"] = secret_key
 
-    print(f"SECRET_KEY={secret_key}")
+    db.create_db()
 
     login_manager = LoginManager()
     login_manager.login_view = "user.login"
