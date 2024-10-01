@@ -76,6 +76,24 @@ def get_current_date():
     return today.strftime("%Y-%m-%d")
 
 
+def create_db():
+    conn = sqlite3.connect(database )
+
+    try:
+        with open("app/schema.sql", "r") as file:
+            schema = file.read()
+
+        with conn:
+            conn.executescript(schema)
+
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    finally:
+        conn.close()
+
+
 def delete_user(user_id):
     query = "DELETE FROM users WHERE id = ?"
     return execute(query, (user_id,))

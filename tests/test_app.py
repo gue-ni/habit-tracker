@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 import pytest
-from app import create_app
+from app import create_app, db
 
 @pytest.fixture()
 def app():
@@ -15,6 +15,7 @@ def app():
     })
 
     # other setup can go here
+    db.create_db()
 
     yield app
 
