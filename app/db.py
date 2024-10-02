@@ -65,7 +65,25 @@ INSERT INTO quotes (quote, author) VALUES
   ("We become what we repeatedly do.", "Sean Covey"),
   ("A nail is driven out by another nail; habit is overcome by habit.", "Erasmus"),
   ("Habit is a cable; we weave a thread of it each day, and at last, we cannot break it.", "Horace Mann"),
-  ("A man should be upright, not be kept upright.", "Marcus Aurelius");
+  ("A man should be upright, not be kept upright.", "Marcus Aurelius"),
+  ("First we make our habits, then our habits make us.", "Charles C. Noble"),
+  ("Motivation is what gets you started. Habit is what keeps you going.", "Jim Ryun"),
+  ("The chains of habit are too weak to be felt until they are too strong to be broken.", "Samuel Johnson"),
+  ("Your habits will determine your future.", "Jack Canfield"),
+  ("Quality is not an act, it is a habit.", "Aristotle"),
+  ("The secret to permanently breaking any bad habit is to love something greater than the habit.", "Bryant McGill"),
+  ("Small disciplines repeated with consistency every day lead to great achievements gained slowly over time.", "John Maxwell"),
+  ("The only way you can sustain a permanent change is to create a new way of thinking, acting, and being.", "Jennifer Hudson"),
+("Good habits are worth being fanatical about.", "John Irving"),
+("Habit is a cable; we weave a thread of it every day, and at last we cannot break it.", "Horace Mann"),
+("Your net worth to the world is usually determined by what remains after your bad habits are subtracted from your good ones.", "Benjamin Franklin"),
+("The secret of your success is found in your daily routine.", "John C. Maxwell"),
+("Motivation is what gets you started. Habit is what keeps you going.", "Jim Ryun"),
+("Good habits, once established, are just as hard to break as bad habits.", "Robert Puller"),
+("Change might not be fast and it isn't always easy. But with time and effort, almost any habit can be reshaped.", "Charles Duhigg"),
+("The difference between an amateur and a professional is in their habits. An amateur has amateur habits. A professional has professional habits.", "Steven Pressfield"),
+("The best way to break a bad habit is to drop it.", "Leo Aikman")
+  ;
 """
 
 
