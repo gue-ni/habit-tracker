@@ -1,6 +1,6 @@
 import sqlite3
 import datetime
-
+import os
 
 database = "./db/database.sqlite"
 
@@ -139,6 +139,11 @@ def get_current_date():
 
 
 def create_db():
+    dirname = os.path.dirname(database) 
+
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+        
     conn = sqlite3.connect(database)
 
     try:
