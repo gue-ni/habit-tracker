@@ -157,11 +157,11 @@ def get_current_date():
 
 
 def create_db():
-    dirname = os.path.dirname(database) 
+    dirname = os.path.dirname(database)
 
     if not os.path.isdir(dirname):
         os.makedirs(dirname)
-        
+
     conn = sqlite3.connect(database)
 
     try:
@@ -251,32 +251,28 @@ def get_todo_daily_events(user_id):
 def get_todo_weekly_events(user_id):
     last_monday = get_last_monday()
 
-    query = """SELECT sub.id, sub.event_name, sub.event_type, sub.event_emoji, sub.description, sub.event_repeat, sub.hex_color, sub.cnt, sub.last_occured FROM
-                (
-                    SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, e.event_repeat_per_week, COUNT(o.id) as cnt, o.occured_at, e.user_id, MAX(o.occured_at) AS last_occured
-                    FROM events e
-                    LEFT JOIN occurences o
-                    ON e.id = o.event_id
-                    GROUP BY e.id
-                    HAVING DATE(?) <= o.occured_at OR o.occured_at IS NULL
-                ) AS sub
-                WHERE
-                    sub.event_repeat = 'WEEKLY'
-                    AND sub.user_id = ?
-                    AND sub.cnt < sub.event_repeat_per_week
-                    AND (sub.last_occured IS NULL OR sub.last_occured != CURRENT_DATE)
-            """
+    query = """
+        SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, e.event_repeat_per_week, COUNT(o.id) AS count, o.occured_at, e.user_id, MAX(o.occured_at) AS last
+        FROM events e
+        LEFT JOIN
+        (SELECT * FROM occurences WHERE occured_at > DATE(?)) AS o
+        ON e.id = o.event_id
+        WHERE e.user_id = ? AND e.event_repeat = 'WEEKLY'
+        GROUP BY e.id
+        HAVING (count < e.event_repeat_per_week AND (last IS NULL OR last < CURRENT_DATE))
+    """
 
     query2 = """
         SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, e.event_repeat_per_week, COUNT(o.id) as cnt, o.occured_at, e.user_id, MAX(o.occured_at) AS last_occured
         FROM events e
         LEFT JOIN occurences o
         ON e.id = o.event_id
+        WHERE (e.user_id = ?) AND (e.event_repeat = 'WEEKLY')
         GROUP BY e.id
-        HAVING (DATE(?) <= o.occured_at OR o.occured_at IS NULL) AND (e.user_id = ?) AND (e.event_repeat = 'WEEKLY')
+        HAVING (DATE(?) <= o.occured_at OR o.occured_at IS NULL)
     """
 
-    return fetchall(query2, (last_monday, user_id))
+    return fetchall(query, (last_monday, user_id,))
 
 
 def get_all_events(user_id):
