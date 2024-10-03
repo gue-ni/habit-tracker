@@ -262,17 +262,13 @@ def get_todo_weekly_events(user_id):
         HAVING (count < e.event_repeat_per_week AND (last IS NULL OR last < CURRENT_DATE))
     """
 
-    query2 = """
-        SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, e.event_repeat_per_week, COUNT(o.id) as cnt, o.occured_at, e.user_id, MAX(o.occured_at) AS last_occured
-        FROM events e
-        LEFT JOIN occurences o
-        ON e.id = o.event_id
-        WHERE (e.user_id = ?) AND (e.event_repeat = 'WEEKLY')
-        GROUP BY e.id
-        HAVING (DATE(?) <= o.occured_at OR o.occured_at IS NULL)
-    """
-
-    return fetchall(query, (last_monday, user_id,))
+    return fetchall(
+        query,
+        (
+            last_monday,
+            user_id,
+        ),
+    )
 
 
 def get_all_events(user_id):
