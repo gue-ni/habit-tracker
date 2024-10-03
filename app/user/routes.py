@@ -24,28 +24,32 @@ def login():
 
         if not user:
             flash("Unknown username.", "danger")
+            return render_template("login.html", form=form), 404
 
         else:
             (id, name, hashed_password) = user
 
             if bcrypt.checkpw(password.encode("utf-8"), hashed_password):
                 new_user = User(id=id, name=name)
-                remember_me = form.remember_me.data
-                login_user(new_user, remember=True)
+                remember_me = form.remember_me.data == True
+                login_user(new_user, remember=remember_me)
                 flash("Logged in successfully.", "success")
                 return redirect(url_for("main.dashboard"))
             else:
                 flash("Invalid username or password.", "danger")
+                return render_template("login.html", form=form), 400
 
     return render_template("login.html", form=form)
 
 
 @bp.route("/signup", methods=["GET", "POST"])
 def signup():
+
     if current_user.is_authenticated:
         return redirect(url_for("main.dashboard"))
 
     form = SignupForm()
+
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data

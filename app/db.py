@@ -1,8 +1,90 @@
 import sqlite3
 import datetime
-
+import os
 
 database = "./db/database.sqlite"
+
+
+schema = """
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event_name TEXT NOT NULL,
+  event_tag TEXT,
+  event_type TEXT CHECK(event_type IN ('HABIT', 'QUIT', 'MEASURE')) NOT NULL DEFAULT 'HABIT',
+  event_repeat TEXT CHECK(event_repeat IN ('DAILY', 'WEEKLY')) NOT NULL DEFAULT 'DAILY',
+  event_repeat_per_week INTEGER CHECK (NOT (event_repeat = 'WEEKLY' AND event_repeat_per_week IS NULL)),
+  event_emoji TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  user_id INTEGER,
+  description TEXT,
+  hex_color TEXT DEFAULT '#FF5733',
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS occurences (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event_id INTEGER,
+  occured_at DATE DEFAULT CURRENT_DATE,
+  comment TEXT,
+  numeric_value FLOAT,
+  UNIQUE (event_id, occured_at),
+  FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS streaks (
+  event_id INTEGER PRIMARY KEY,
+  streak INTEGER NOT NULL DEFAULT 1,
+  last_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  active_since TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS quotes;
+
+CREATE TABLE IF NOT EXISTS quotes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  quote TEXT NOT NULL,
+  author TEXT NOT NULL
+);
+
+INSERT INTO quotes (quote, author) VALUES
+  ('Habits change into character.', 'Ovid'),
+  ('Good habits formed at youth make all the difference.', 'Aristotle'),
+  ('Successful people are simply those with successful habits.', 'Brian Tracy'),
+  ("Rome wasn't built in a day.", 'Unknown'),
+  ("There is no elevator to success, you have to take the stairs.", "Zig Ziglar"),
+  ("Our life is what our thoughts make it.", "Marcus Aurelius"),
+  ("Each day provides its own gifts.", "Marcus Aurelius"),
+  ("We become what we repeatedly do.", "Sean Covey"),
+  ("A nail is driven out by another nail; habit is overcome by habit.", "Erasmus"),
+  ("Habit is a cable; we weave a thread of it each day, and at last, we cannot break it.", "Horace Mann"),
+  ("A man should be upright, not be kept upright.", "Marcus Aurelius"),
+  ("First we make our habits, then our habits make us.", "Charles C. Noble"),
+  ("Motivation is what gets you started. Habit is what keeps you going.", "Jim Ryun"),
+  ("The chains of habit are too weak to be felt until they are too strong to be broken.", "Samuel Johnson"),
+  ("Your habits will determine your future.", "Jack Canfield"),
+  ("Quality is not an act, it is a habit.", "Aristotle"),
+  ("The secret to permanently breaking any bad habit is to love something greater than the habit.", "Bryant McGill"),
+  ("Small disciplines repeated with consistency every day lead to great achievements gained slowly over time.", "John Maxwell"),
+  ("The only way you can sustain a permanent change is to create a new way of thinking, acting, and being.", "Jennifer Hudson"),
+("Good habits are worth being fanatical about.", "John Irving"),
+("Habit is a cable; we weave a thread of it every day, and at last we cannot break it.", "Horace Mann"),
+("Your net worth to the world is usually determined by what remains after your bad habits are subtracted from your good ones.", "Benjamin Franklin"),
+("The secret of your success is found in your daily routine.", "John C. Maxwell"),
+("Motivation is what gets you started. Habit is what keeps you going.", "Jim Ryun"),
+("Good habits, once established, are just as hard to break as bad habits.", "Robert Puller"),
+("Change might not be fast and it isn't always easy. But with time and effort, almost any habit can be reshaped.", "Charles Duhigg"),
+("The difference between an amateur and a professional is in their habits. An amateur has amateur habits. A professional has professional habits.", "Steven Pressfield"),
+("The best way to break a bad habit is to drop it.", "Leo Aikman")
+  ;
+"""
 
 
 def fetchall(query, params=()):
@@ -42,12 +124,10 @@ def fetchone(query, params=()):
 def execute(query, params=()):
     con = None
     try:
-        print(params)
         con = sqlite3.connect(database)
         cur = con.cursor()
         cur.execute(query, params)
         con.commit()
-        print("cool")
         return True
     except Exception as e:
         print(f"An error occured: {e}")
@@ -74,6 +154,25 @@ def get_yesterday():
 def get_current_date():
     today = datetime.date.today()
     return today.strftime("%Y-%m-%d")
+
+
+def create_db():
+    dirname = os.path.dirname(database)
+
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+
+    conn = sqlite3.connect(database)
+
+    try:
+        with conn:
+            conn.executescript(schema)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    finally:
+        conn.close()
 
 
 def delete_user(user_id):
@@ -152,32 +251,24 @@ def get_todo_daily_events(user_id):
 def get_todo_weekly_events(user_id):
     last_monday = get_last_monday()
 
-    query = """SELECT sub.id, sub.event_name, sub.event_type, sub.event_emoji, sub.description, sub.event_repeat, sub.hex_color, sub.cnt, sub.last_occured FROM
-                (
-                    SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, e.event_repeat_per_week, COUNT(o.id) as cnt, o.occured_at, e.user_id, MAX(o.occured_at) AS last_occured
-                    FROM events e
-                    LEFT JOIN occurences o
-                    ON e.id = o.event_id
-                    GROUP BY e.id
-                    HAVING DATE(?) <= o.occured_at OR o.occured_at IS NULL
-                ) AS sub
-                WHERE
-                    sub.event_repeat = 'WEEKLY'
-                    AND sub.user_id = ?
-                    AND sub.cnt < sub.event_repeat_per_week
-                    AND (sub.last_occured IS NULL OR sub.last_occured != CURRENT_DATE)
-            """
-
-    query2 = """
-        SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, e.event_repeat_per_week, COUNT(o.id) as cnt, o.occured_at, e.user_id, MAX(o.occured_at) AS last_occured
+    query = """
+        SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, e.event_repeat_per_week, COUNT(o.id) AS count, o.occured_at, e.user_id, MAX(o.occured_at) AS last
         FROM events e
-        LEFT JOIN occurences o
+        LEFT JOIN
+        (SELECT * FROM occurences WHERE occured_at > DATE(?)) AS o
         ON e.id = o.event_id
+        WHERE e.user_id = ? AND e.event_repeat = 'WEEKLY'
         GROUP BY e.id
-        HAVING (DATE(?) <= o.occured_at OR o.occured_at IS NULL) AND (e.user_id = ?) AND (e.event_repeat = 'WEEKLY')
+        HAVING (count < e.event_repeat_per_week AND (last IS NULL OR last < CURRENT_DATE))
     """
 
-    return fetchall(query2, (last_monday, user_id))
+    return fetchall(
+        query,
+        (
+            last_monday,
+            user_id,
+        ),
+    )
 
 
 def get_all_events(user_id):
