@@ -69,13 +69,13 @@ class RecordEventForm(FlaskForm):
     submit = SubmitField("Done")
 
 
-def get_last_five_weeks_dates():
+def get_last_n_weeks_dates(n):
     today = datetime.today()
     start_of_week = today - timedelta(days=today.weekday())
 
     days = []
 
-    for i in range(5):
+    for i in range(n):
         week_start = start_of_week - timedelta(weeks=i)
         week_dates = [week_start + timedelta(days=d) for d in range(7)]
         week_dates.reverse()
@@ -100,7 +100,7 @@ def event(id):
     occurences = db.get_all_occurences_of_event(event_id=id)
     occurences = [datestring_to_obj(occurence[1]) for occurence in occurences]
 
-    last_five_weeks = get_last_five_weeks_dates()
+    last_five_weeks = get_last_n_weeks_dates(5)
 
     today = date.today()
 
@@ -191,7 +191,7 @@ def new_event():
 @login_required
 def record_event(id):
     current_date = get_current_date()
-    date = request.args.get("date", current_date)
+    date_param = request.args.get("date", current_date)
     form = RecordEventForm()
 
     if request.method == "POST":
@@ -228,12 +228,27 @@ def record_event(id):
         if not event:
             abort(404)
 
+        occurences = [
+            datestring_to_obj(occurence[1])
+            for occurence in db.get_all_occurences_of_event(event_id=id)
+        ]
+
+        last_week = get_last_n_weeks_dates(n=1)
+
+        calendar = [
+            (day.strftime("%d"), day in occurences, obj_to_datestring(day))
+            for day in last_week
+        ]
+        calendar.reverse()
+
         return render_template(
             "record_event.html",
             event=event,
             form=form,
             date=date,
-            is_today=(date == current_date),
+            calendar=calendar,
+            current_date=current_date,
+            is_today=(date_param == current_date),
         )
 
 

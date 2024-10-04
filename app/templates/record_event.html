@@ -15,7 +15,7 @@
   </div>
   <div class="p-6 font-semibold text-slate-700">
     {% if event[4] %}
-    <div class="py-4">
+    <div class="py-y">
       <div class="py-2">
         <h2>Description:</h2>
       </div>
@@ -27,7 +27,7 @@
     </div>
     {% endif %}
     {% if not is_today %}
-    <div class="py-4">
+    <div class="py-y">
       <div class="py-2">
         <h2>Date:</h2>
       </div>
@@ -38,7 +38,7 @@
       </div>
     </div>
     {% endif %}
-    <div class="py-4">
+    <div class="py-y">
       <div class="py-2">
         <h2>Repeat</h2>
       </div>
@@ -53,6 +53,34 @@
       </div>
     </div>
     <div class="py-4">
+  <div class="py-2">
+        <h2>This Week</h2>
+      </div>
+      <div class="max-w-md mx-auto p-4 bg-white rounded-lg border border-slate-900/10">
+        <div class="grid grid-cols-7 gap-2 text-center text-gray-500 mb-2">
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+          <div>Sun</div>
+        </div>
+        <div class="grid grid-cols-7 gap-2 text-center">
+          {% for day in calendar %}
+          <div>
+            <span>
+              <div
+                class="p-2 {% if day[1] %}bg-green-200{% else %} bg-gray-200 {% endif %} rounded {% if day[2] == current_date %}border-2 border-slate-900{% endif %}">
+                {{ day[0] }}
+              </div>
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="py-4">
       <form action="" method="post">
         {{ form.hidden_tag() }}
         {% if event[2] == "MEASURE" %}
@@ -63,7 +91,8 @@
         {% endif %}
         <div class="py-4">
           {{ form.submit(class_="w-full bg-slate-900 text-slate-100 text-5xl p-4 text-center rounded-lg border
-          border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90") }}
+          border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600
+          active:scale-90") }}
         </div>
       </form>
     </div>
