@@ -47,6 +47,15 @@ def compute_weekly_streak(dates, current_date, target_weekly_repeat):
     pass
 
 
+def previous_week(year, week):
+    week -= 1
+    if week == 0:
+        year -= 1
+        week = 52
+
+    return (year, week)
+
+
 def compute_streak(event_id):
     event = db.get_event(event_id)
     # print(f"compute_streak {event[1]}")
@@ -55,9 +64,6 @@ def compute_streak(event_id):
     occurences = db.get_all_occurences(event_id=event_id)
     occurences.reverse()
 
-    if len(occurences) == 0:
-        return 0
-
     today = datetime.datetime.now().date()
 
     dates = [
@@ -65,7 +71,10 @@ def compute_streak(event_id):
         for occurence in occurences
     ]
 
-    if dates[0] == today and len(dates) == 1:
+    if len(dates) == 0:
+        return 0
+
+    if len(dates) == 1 and dates[0] == today:
         return 1
 
     streak = 0
@@ -97,46 +106,42 @@ def compute_streak(event_id):
                 break
 
     else:
-        repeat_per_week = event[7]
+        count_target = event[7]
 
         event_counts = defaultdict(int)
 
+        # count occurences per week
         for date in dates:
             year, week, _ = date.isocalendar()
             event_counts[(year, week)] += 1
 
-        # print(event_counts)
-
         current_year, current_week, _ = datetime.datetime.now().isocalendar()
-
         year, week = current_year, current_week
 
-        N = repeat_per_week
+        # streak can still be valid if last event was last week
+        if not (year, week) in event_counts:
+            (year, week) = previous_week(year, week)
 
         while (year, week) in event_counts:
-            count = event_counts[(year, week)]
-            # print(f"year={year}, week={week}, count={count}")
 
-            if count >= repeat_per_week or week == current_week:
+            count = event_counts[(year, week)]
+
+            # streak counts if target was met or week is not yet finished
+            if count >= count_target or week == current_week:
                 streak += count
 
-            week -= 1
-            if week == 0:
-                year -= 1
-                week = 52
+            (year, week) = previous_week(year, week)
 
     return streak
 
 
 def compute_all_streaks(user_id):
     streak_to_recompute = db.get_all_streaks_for_user(user_id)
-    # print(streak_to_recompute)
 
     for streak in streak_to_recompute:
         event_id = streak[0]
         old_count = streak[2]
         new_count = compute_streak(event_id=event_id)
-        print(f"{streak}, old_count={old_count}, new_count={new_count}")
         db.update_streak(event_id=event_id, streak=new_count)
 
 
