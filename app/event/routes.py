@@ -202,10 +202,10 @@ def record_event(id):
         if numeric_value:
             numeric_value = float(numeric_value)
             ok = db.insert_measurement_of_event(
-                event_id=id, value=numeric_value, date=date
+                event_id=id, value=numeric_value, date=date_param
             )
         else:
-            ok = db.insert_occurence_of_event(event_id=id, date=date)
+            ok = db.insert_occurence_of_event(event_id=id, date=date_param)
 
         if not ok:
             abort(500)
