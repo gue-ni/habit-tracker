@@ -17,7 +17,6 @@ from wtforms.validators import DataRequired, Length, EqualTo
 
 class EventType(Enum):
     HABIT = "HABIT"
-    QUIT = "QUIT"
     MEASURE = "MEASURE"
 
 
