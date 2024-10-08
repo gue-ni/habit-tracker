@@ -1,71 +1,15 @@
 from app import db
 from app.event import bp
 from app.utils import datestring_to_obj, obj_to_datestring, get_current_date
+from app.event.forms import CreateEventForm, RecordEventForm
 
 
 import random
 from datetime import datetime, timedelta, date
-from enum import Enum
 
 
 from flask import render_template, request, url_for, redirect, abort, flash
 from flask_login import login_required, current_user
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, DecimalField
-from wtforms.validators import DataRequired, Length, EqualTo
-
-
-class EventType(Enum):
-    HABIT = "HABIT"
-    MEASURE = "MEASURE"
-
-
-class EventFrequency(Enum):
-    DAILY = "DAILY"
-    ONE_PER_WEEK = "1_PER_WEEK"
-    TWO_PER_WEEK = "2_PER_WEEK"
-    THREE_PER_WEEK = "3_PER_WEEK"
-    FOUR_PER_WEEK = "4_PER_WEEK"
-    FIVE_PER_WEEK = "5_PER_WEEK"
-
-
-class CreateEventForm(FlaskForm):
-    event_name = StringField("Name", validators=[DataRequired()])
-    event_emoji = SelectField(
-        "Emoji",
-        choices=[
-            "💪🏼",
-            "🏃‍♂️",
-            "️⚽",
-            "🏋️‍♀️",
-            "😴",
-            "🛌",
-            "🌙",
-            "🎓",
-            "🧠",
-            "📚",
-            "📖",
-            "💧",
-        ],
-        validators=[DataRequired()],
-    )
-    event_description = StringField("Description")
-    event_type = SelectField(
-        "Type",
-        choices=[(e.name, e.value) for e in EventType],
-        validators=[DataRequired()],
-    )
-    event_repeat = SelectField(
-        "Repeat",
-        choices=[e.value for e in EventFrequency],
-        validators=[DataRequired()],
-    )
-    submit = SubmitField("Create")
-
-
-class RecordEventForm(FlaskForm):
-    numeric_value = DecimalField("Numeric Value")
-    submit = SubmitField("Done")
 
 
 def get_last_n_weeks_dates(n):
