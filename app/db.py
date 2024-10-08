@@ -249,9 +249,6 @@ def get_todo_daily_events(user_id):
 
 
 def get_todo_weekly_events(user_id, current_date, last_monday=get_last_monday()):
-
-    print(f"last_monday={last_monday}")
-
     query = """
         SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, COUNT(o.id) AS count, e.event_repeat_per_week, MAX(o.occured_at) AS last
         FROM events e
