@@ -248,26 +248,24 @@ def get_todo_daily_events(user_id):
     return fetchall(query, (user_id,))
 
 
-def get_todo_weekly_events(user_id):
-    last_monday = get_last_monday()
+def get_todo_weekly_events(user_id, current_date, last_monday=get_last_monday()):
+
+    print(f"last_monday={last_monday}")
 
     query = """
-        SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, e.event_repeat_per_week, COUNT(o.id) AS count, o.occured_at, e.user_id, MAX(o.occured_at) AS last
+        SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, COUNT(o.id) AS count, e.event_repeat_per_week, MAX(o.occured_at) AS last
         FROM events e
         LEFT JOIN
-        (SELECT * FROM occurences WHERE occured_at > DATE(?)) AS o
+        (SELECT * FROM occurences WHERE occured_at >= DATE(?)) AS o
         ON e.id = o.event_id
         WHERE e.user_id = ? AND e.event_repeat = 'WEEKLY'
         GROUP BY e.id
-        HAVING (count < e.event_repeat_per_week AND (last IS NULL OR last < CURRENT_DATE))
+        HAVING (count < e.event_repeat_per_week) AND ((last < DATE(?)) OR (last IS NULL))
     """
 
     return fetchall(
         query,
-        (
-            last_monday,
-            user_id,
-        ),
+        (last_monday, user_id, current_date),
     )
 
 

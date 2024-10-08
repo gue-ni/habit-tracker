@@ -2,7 +2,7 @@ from collections import defaultdict
 import datetime
 
 
-from flask import render_template, redirect, url_for, current_app, flash, request
+from flask import render_template, redirect, url_for
 from flask_login import login_required, current_user
 
 
@@ -29,7 +29,7 @@ def get_todos(user_id):
     todo_daily = db.get_todo_daily_events(user_id)
     todo += todo_daily
 
-    todo_week = db.get_todo_weekly_events(user_id)
+    todo_week = db.get_todo_weekly_events(user_id, get_current_date())
     todo += todo_week
 
     return todo
