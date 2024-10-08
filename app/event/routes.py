@@ -1,7 +1,7 @@
 from app import db
 from app.event import bp
 from app.utils import datestring_to_obj, obj_to_datestring, get_current_date
-from app.event.forms import CreateEventForm, RecordEventForm
+from app.event.forms import CreateEventForm, RecordEventForm, EventFrequency
 
 
 import random
