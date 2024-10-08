@@ -40,6 +40,7 @@ class CreateEventForm(FlaskForm):
             "🧹",
             "🧼",
             "🧽",
+            "🧘",
         ],
         validators=[DataRequired()],
     )
