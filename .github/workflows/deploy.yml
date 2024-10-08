@@ -7,10 +7,10 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: executing remote ssh commands using password
+    - name: pull and restart
       uses: appleboy/ssh-action@v1.1.0
       with:
         host: ${{ secrets.HOST }}
@@ -20,5 +20,5 @@ jobs:
         script: |
           whoami
           cd /srv/www/habit-tracker
-          git pull
+          git pull origin master
           docker compose down && docker compose build && docker compose up -d
