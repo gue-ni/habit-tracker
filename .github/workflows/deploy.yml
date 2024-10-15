@@ -18,5 +18,4 @@ jobs:
         script: |
           whoami
           cd /srv/www/habit-tracker
-          git pull origin master
-          docker compose down && docker compose build && docker compose up -d
+          ./pull_and_restart.sh
