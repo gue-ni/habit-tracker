@@ -139,16 +139,17 @@ def record_event(id):
 
     if request.method == "POST":
         numeric_value = form.numeric_value.data
+        comment = form.comment.data
 
         ok = False
 
         if numeric_value:
             numeric_value = float(numeric_value)
             ok = db.insert_measurement_of_event(
-                event_id=id, value=numeric_value, date=date_param
+                event_id=id, value=numeric_value, date=date_param, comment=comment
             )
         else:
-            ok = db.insert_occurence_of_event(event_id=id, date=date_param)
+            ok = db.insert_occurence_of_event(event_id=id, date=date_param, comment=comment)
 
         if not ok:
             abort(500)

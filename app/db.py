@@ -295,20 +295,21 @@ def get_event_by_id(user_id, event_id):
     )
 
 
-def insert_occurence_of_event(event_id, date):
-    query = "INSERT INTO occurences (event_id, occured_at) VALUES (?, ?)"
+def insert_occurence_of_event(event_id, date, comment=""):
+    query = "INSERT INTO occurences (event_id, occured_at, comment) VALUES (?, ?, ?)"
     return execute(
         query,
         (
             event_id,
             date,
+            comment,
         ),
     )
 
 
-def insert_measurement_of_event(event_id, value, date):
+def insert_measurement_of_event(event_id, value, date, comment=""):
     query = (
-        "INSERT INTO occurences (event_id, numeric_value, occured_at) VALUES (?, ?, ?)"
+        "INSERT INTO occurences (event_id, numeric_value, occured_at, comment) VALUES (?, ?, ?, ?)"
     )
     return execute(
         query,
@@ -316,6 +317,7 @@ def insert_measurement_of_event(event_id, value, date):
             event_id,
             value,
             date,
+            comment,
         ),
     )
 

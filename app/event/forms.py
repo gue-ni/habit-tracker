@@ -60,4 +60,6 @@ class CreateEventForm(FlaskForm):
 
 class RecordEventForm(FlaskForm):
     numeric_value = DecimalField("Numeric Value")
+    comment = StringField("Comment")
+
     submit = SubmitField("Done")
