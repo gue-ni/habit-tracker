@@ -56,6 +56,11 @@ def create_app():
 
     app.register_blueprint(event_bp, url_prefix="/event")
 
+    from app.api import bp as api_bp
+
+    app.register_blueprint(api_bp, url_prefix="/api")
+
+
     @app.route("/test/")
     def test_page():
         return "<h1>Testing the Flask Application Factory Pattern</h1>"
