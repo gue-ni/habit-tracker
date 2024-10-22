@@ -24,3 +24,13 @@ def api_events():
         return jsonify(events)
     else:
         return jsonify([])
+
+@bp.route("/streaks")
+@login_required
+def api_streaks():
+    data = db.get_all_streaks_for_user(current_user.id)
+    if data:
+        return jsonify(data)
+    else:
+        return jsonify([])
+

@@ -307,9 +307,7 @@ def insert_occurence_of_event(event_id, date, comment=""):
 
 
 def insert_measurement_of_event(event_id, value, date, comment=""):
-    query = (
-        "INSERT INTO occurences (event_id, numeric_value, occured_at, comment) VALUES (?, ?, ?, ?)"
-    )
+    query = "INSERT INTO occurences (event_id, numeric_value, occured_at, comment) VALUES (?, ?, ?, ?)"
     return execute(
         query,
         (
