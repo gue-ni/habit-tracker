@@ -1,6 +1,6 @@
 from app import db
 from app.api import bp
-from app.utils import datestring_to_obj, obj_to_datestring, get_current_date, get_todos
+from app.utils import get_todos
 
 from flask import jsonify
 from flask_login import login_required, current_user

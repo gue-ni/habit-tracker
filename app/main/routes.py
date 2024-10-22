@@ -1,14 +1,9 @@
-from collections import defaultdict
-import datetime
-
-
 from flask import render_template, redirect, url_for
 from flask_login import login_required, current_user
 
 
 from app.main import bp
 from app import db
-from app.models import User, AppException
 from app.utils import get_todos, compute_all_streaks
 
 
