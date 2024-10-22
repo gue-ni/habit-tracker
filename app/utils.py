@@ -1,9 +1,10 @@
-from datetime import datetime, date
+import datetime
+from collections import defaultdict
 from app import db
 
 
 def datestring_to_obj(string):
-    return datetime.strptime(string, "%Y-%m-%d").date()
+    return datetime.datetime.strptime(string, "%Y-%m-%d").date()
 
 
 def obj_to_datestring(obj):
@@ -11,7 +12,7 @@ def obj_to_datestring(obj):
 
 
 def get_current_date():
-    today = date.today()
+    today = datetime.date.today()
     return obj_to_datestring(today)
 
 
