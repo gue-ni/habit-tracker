@@ -82,8 +82,7 @@ INSERT INTO quotes (quote, author) VALUES
   ("Good habits, once established, are just as hard to break as bad habits.", "Robert Puller"),
   ("Change might not be fast and it isn't always easy. But with time and effort, almost any habit can be reshaped.", "Charles Duhigg"),
   ("The difference between an amateur and a professional is in their habits. An amateur has amateur habits. A professional has professional habits.", "Steven Pressfield"),
-  ("The best way to break a bad habit is to drop it.", "Leo Aikman")
-  ;
+  ("The best way to break a bad habit is to drop it.", "Leo Aikman");
 """
 
 
