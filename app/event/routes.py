@@ -189,9 +189,8 @@ def record_event(id):
             "record_event.html",
             event=event,
             form=form,
-            date=date,
+            date=date_param,
             calendar=calendar,
-            current_date=current_date,
             is_today=(date_param == current_date),
         )
 
