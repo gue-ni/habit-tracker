@@ -28,11 +28,13 @@ def get_last_n_weeks_dates(n):
 
 
 @bp.route("/<int:id>/numeric")
+@login_required
 def numeric(id):
     return db.get_all_measurements(id)
 
 
 @bp.route("/<int:id>", methods=["GET"])
+@login_required
 def event(id):
     event = db.get_event_by_id(event_id=id, user_id=current_user.id)
     if not event:

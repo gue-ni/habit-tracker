@@ -21,3 +21,16 @@ class SignupForm(FlaskForm):
         "Confirm Password", validators=[DataRequired(), EqualTo("password")]
     )
     submit = SubmitField("Sign Up")
+
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField(
+        "Old Password", validators=[DataRequired(), Length(min=4)]
+    )
+    new_password = PasswordField(
+        "New Password", validators=[DataRequired(), Length(min=4)]
+    )
+    confirm_password = PasswordField(
+        "Confirm Password", validators=[DataRequired(), EqualTo("new_password")]
+    )
+    submit = SubmitField("Change Password")

@@ -1,5 +1,5 @@
 from app.user import bp
-from app.user.forms import SignupForm, LoginForm
+from app.user.forms import SignupForm, LoginForm, ChangePasswordForm
 from app.models import User, AppException
 from app import db
 
@@ -92,3 +92,29 @@ def delete():
     db.delete_user(user_id=current_user.id)
     logout_user()
     return redirect(url_for("main.index"))
+
+
+@bp.route("/change-password", methods=["GET", "POST"])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+        old_password = form.old_password.data
+        new_password = form.new_password.data
+
+        user = db.get_user_by_id(current_user.id)
+        print(user)
+        (id, name, old_hash, joined) = user
+        print(f"old_hash={old_hash}, new_password={new_password}, old_password={old_password}")
+
+
+        if bcrypt.checkpw(old_password.encode("utf-8"), old_hash):
+            new_hash = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
+            db.update_password(user_id=current_user.id, new_password=new_hash)
+            flash("Changed password.", "success")
+            return redirect(url_for("main.dashboard"))
+        else:
+            flash("Old password invalid.", "danger")
+
+    return render_template("change_pw.html", form=form)

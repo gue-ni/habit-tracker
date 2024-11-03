@@ -184,6 +184,11 @@ def insert_user(username, password):
     return execute(query, (username, password))
 
 
+def update_password(user_id, new_password):
+    query = "UPDATE users SET password = ? WHERE id = ?"
+    return execute(query, (new_password, user_id))
+
+
 def get_users():
     query = "SELECT name, password FROM users"
     return fetchall(query)
