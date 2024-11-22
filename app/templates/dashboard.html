@@ -61,65 +61,76 @@
   <p>All done today, well done!</p>
 </div>
 {% endif %}
-{% if all_events %}
 <div class="py-4">
-  <h2 class="text-2xl">
-    Habits
-  </h2>
-  <p>Your habits & streaks</p>
-</div>
-<div class="py-4">
-  <div class="bg-white px-4 rounded-lg border border-slate-900/10">
-    {% for event in all_events %}
-    <div>
-      <a href="{{ url_for('event.event', id=event[0]) }}">
-        <div class="flex justify-between py-4">
-          <div><span class="pr-2">{{ event[3] }}</span> {{ event[1] }}</div>
-          <div>
-            {% if event[7] > 0 %}
-            <span>{{ event[7] }} 🔥</span>
-            {% endif %}
-          </div>
-        </div>
-        {% if not loop.last %}
-        <hr class="border-slate-900/10" />
-        {% endif %}
-      </a>
-    </div>
-    {% endfor %}
+  <div class="">
+    <h2 class="text-2xl">
+      Habits
+    </h2>
+    <p>Your habits & streaks</p>
   </div>
+  {% if all_events %}
+  <div class="py-2">
+    <div class="bg-white px-4 rounded-lg border border-slate-900/10">
+      {% for event in all_events %}
+      <div>
+        <a href="{{ url_for('event.event', id=event[0]) }}">
+          <div class="flex justify-between py-4">
+            <div><span class="pr-2">{{ event[3] }}</span> {{ event[1] }}</div>
+            <div>
+              {% if event[7] > 0 %}
+              <span>{{ event[7] }} 🔥</span>
+              {% endif %}
+            </div>
+          </div>
+          {% if not loop.last %}
+          <hr class="border-slate-900/10" />
+          {% endif %}
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div>
+    None created yet. Create habits to start tracking.
+  </div>
+  {% endif %}
 </div>
-{% endif %}
 <div class="py-4">
-  <h2 class="text-2xl">
-    Days Since
-  </h2>
-  <p>
-    Record the number of days since a specific event.
-  </p>
-</div>
-<div class="py-4">
-  <div class="bg-white px-4 rounded-lg border border-slate-900/10">
-    {% for event in days_since %}
-    <div>
-      <a href="{{ url_for('event.record_event', id=event[0]) }}">
-        <div class="flex justify-between py-4">
-          <div><span class="pr-2">{{ event[2] }}</span> {{ event[1] }}</div>
-          {% if 0 <= event[4] %}
-          <div>
-            <span>{{ event[4] }}</span>
+  <div class="">
+    <h2 class="text-2xl">
+      Days Since
+    </h2>
+    <p>
+      Record the number of days since a specific event.
+    </p>
+  </div>
+  <div class="py-2">
+    {% if days_since %}
+    <div class="bg-white px-4 rounded-lg border border-slate-900/10">
+      {% for event in days_since %}
+      <div>
+        <a href="{{ url_for('event.record_event', id=event[0]) }}">
+          <div class="flex justify-between py-4">
+            <div><span class="pr-2">{{ event[2] }}</span> {{ event[1] }}</div>
+            {% if 0 <= event[4] %} <div>
+              <span>{{ event[4] }}</span>
           </div>
           {% endif %}
-        </div>
+      </div>
       </a>
       {% if not loop.last %}
       <hr class="border-slate-900/10" />
       {% endif %}
     </div>
     {% endfor %}
+    {% else %}
+    <div>
+      None created yet. Create a Event with Type 'QUIT' to start counting days.
+    </div>
+    {% endif %}
   </div>
 </div>
-
 <div class="py-4">
   <div class="py-2">
     <a href="{{ url_for('event.new_event') }}" class="">
