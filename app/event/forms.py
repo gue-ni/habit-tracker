@@ -77,7 +77,7 @@ class CreateEventForm(FlaskForm):
         validators=[DataRequired()],
     )
     event_repeat = SelectField(
-        "Repeat",
+        "Repeat (Not applicable to 'Days Since')",
         choices=[(e.value, pretty_enum[e.value]) for e in EventFrequency],
         validators=[DataRequired()],
     )
