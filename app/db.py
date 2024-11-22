@@ -276,6 +276,7 @@ def get_all_events(user_id):
         FROM events e
         LEFT JOIN streaks s ON e.id = s.event_id
         WHERE e.user_id = ?
+        ORDER BY s.streak DESC
         """
     return fetchall(query, (user_id,))
 
