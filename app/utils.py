@@ -108,6 +108,8 @@ def compute_streak(event_id):
             # streak counts if target was met or week is not yet finished
             if count >= count_target or week == current_week:
                 streak += count
+            else:
+                break
 
             (year, week) = previous_week(year, week)
 
