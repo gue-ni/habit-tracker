@@ -9,6 +9,7 @@ from wtforms.validators import DataRequired
 class EventType(Enum):
     HABIT = "HABIT"
     MEASURE = "MEASURE"
+    QUIT = "QUIT"
 
 
 class EventFrequency(Enum):
