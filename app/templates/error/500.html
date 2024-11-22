@@ -1,19 +1,7 @@
-{% extends "layout.html" %}
-{% block title %}Something went wrong{% endblock %}
-{% block content %}
-<div class="border-y border-slate-900/10">
-  <div class="bg-white py-4 px-6 flex items-center relative">
-    <a href="{{ url_for('main.dashboard') }}" class="absolute left-6 text-white hover:text-gray-200 flex items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="black">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-    </a>
-    <h1 class="text-2xl font-semibold mx-auto text-slate-700">Something went wrong</h1>
-  </div>
-</div>
-<div class="p-6 font-semibold text-slate-700">
-  <div class="text-center">
-    <h2 class="text-4xl">500</h2>
-  </div>
+{% extends "layout/sub_page.html" %}
+{% block title %}Internal Server Error{% endblock %}
+{% block page_content %}
+<div class="text-center">
+  <h2 class="text-4xl">500 - Internal Server Error</h2>
 </div>
 {% endblock %}

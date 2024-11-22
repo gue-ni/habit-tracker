@@ -247,7 +247,7 @@ def get_todo_daily_events(user_id):
         SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color
         FROM events e
         LEFT JOIN occurences o ON e.id = o.event_id and date(o.occured_at) = CURRENT_DATE
-        WHERE o.occured_at IS NULL AND e.event_repeat = 'DAILY' AND user_id = ?
+        WHERE o.occured_at IS NULL AND e.event_repeat = 'DAILY' AND user_id = ? AND e.event_type != 'QUIT'
     """
     return fetchall(query, (user_id,))
 
@@ -259,7 +259,7 @@ def get_todo_weekly_events(user_id, current_date, last_monday=get_last_monday())
         LEFT JOIN
         (SELECT * FROM occurences WHERE occured_at >= DATE(?)) AS o
         ON e.id = o.event_id
-        WHERE e.user_id = ? AND e.event_repeat = 'WEEKLY'
+        WHERE e.user_id = ? AND e.event_repeat = 'WEEKLY' AND e.event_type != 'QUIT'
         GROUP BY e.id
         HAVING (count < e.event_repeat_per_week) AND ((last < DATE(?)) OR (last IS NULL))
     """
@@ -270,12 +270,25 @@ def get_todo_weekly_events(user_id, current_date, last_monday=get_last_monday())
     )
 
 
+def get_all_days_since(user_id):
+    query = """
+    SELECT e.id, e.event_name, e.event_emoji, MAX(o.occured_at), IFNULL(CAST(julianday('now') - julianday(MAX(o.occured_at)) AS INTEGER), -1) AS days_since_last
+    FROM events e
+    LEFT JOIN occurences o
+    ON e.id = o.event_id
+    WHERE e.event_type = 'QUIT' AND e.user_id = ?
+    GROUP BY e.id
+    """
+    return fetchall(query, (user_id,))
+
+
 def get_all_events(user_id):
     query = """
         SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, ifnull(s.streak, 0)
         FROM events e
         LEFT JOIN streaks s ON e.id = s.event_id
-        WHERE e.user_id = ?
+        WHERE e.user_id = ? AND e.event_type != 'QUIT'
+        ORDER BY s.streak DESC
         """
     return fetchall(query, (user_id,))
 

@@ -1,44 +1,37 @@
-{% extends "layout.html" %}
+{% extends "layout/page.html" %}
 {% block title %}Habit Tracker{% endblock %}
-{% block content %}
-<div class="border border-slate-900/10">
-  <div class="bg-white py-4 px-6 flex items-center relative">
-    <h1 class="text-2xl font-semibold mx-auto text-slate-700">Habit Tracker</h1>
-  </div>
+{% block page_content %}
+<div class="py-6 text-center text-2xl text-semibold w-full bg-white rounded-lg border border-slate-900/10 p-4">
+  <p class="py-2">
+    A simple habit tracker website that helps you stick to daily or weekly habits by tracking streaks and visualizing
+    your progress.
+  </p>
+  <p class="py-2">
+    Develop healthy habits, quit harmful practices and stick to routines to achieve your goals.
+  </p>
 </div>
-<div class="p-6 font-semibold text-slate-700 border-x border-slate-900/10">
-  <div class="py-6 text-center text-2xl text-semibold w-full bg-white rounded-lg border border-slate-900/10 p-4">
-    <p class="py-2">
-      A simple habit tracker website that helps you stick to daily or weekly habits by tracking streaks and visualizing
-      your progress.
+<div class="pt-6">
+  <div class="py-3">
+    <p>
+      Already have an account?
     </p>
-    <p class="py-2">
-      Develop healthy habits, quit harmful practices and stick to routines to achieve your goals.
-    </p>
+    <a href="{{ url_for('user.login') }}" class="">
+      <div
+        class="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90">
+        Login
+      </div>
+    </a>
   </div>
-  <div class="pt-6">
-    <div class="py-3">
-      <p>
-        Already have an account?
-      </p>
-      <a href="{{ url_for('user.login') }}" class="">
-        <div
-          class="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90">
-          Login
-        </div>
-      </a>
-    </div>
-    <div class="py-3">
-      <p>
-        No account yet?
-      </p>
-      <a href="{{ url_for('user.signup') }}" class="">
-        <div
-          class="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90">
-          Signup
-        </div>
-      </a>
-    </div>
+  <div class="py-3">
+    <p>
+      No account yet?
+    </p>
+    <a href="{{ url_for('user.signup') }}" class="">
+      <div
+        class="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90">
+        Signup
+      </div>
+    </a>
   </div>
 </div>
 {% endblock %}

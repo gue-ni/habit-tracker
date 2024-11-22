@@ -29,6 +29,8 @@ def dashboard():
 
     todo = get_todos(current_user.id)
 
+    days_since = db.get_all_days_since(current_user.id)
+
     return render_template(
-        "dashboard.html", user=current_user, events_todo=todo, all_events=events
+        "dashboard.html", user=current_user, events_todo=todo, all_events=events, days_since=days_since
     )

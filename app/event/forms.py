@@ -9,6 +9,7 @@ from wtforms.validators import DataRequired
 class EventType(Enum):
     HABIT = "HABIT"
     MEASURE = "MEASURE"
+    QUIT = "QUIT"
 
 
 class EventFrequency(Enum):
@@ -21,27 +22,28 @@ class EventFrequency(Enum):
 
 
 class CreateEventForm(FlaskForm):
+    emojis = [
+        "💪🏼",
+        "🏃‍♂️",
+        "️⚽",
+        "🏋️‍♀️",
+        "😴",
+        "🛌",
+        "🌙",
+        "🎓",
+        "🧠",
+        "📚",
+        "📖",
+        "💧",
+        "🧹",
+        "🧼",
+        "🧽",
+        "🧘",
+    ]
     event_name = StringField("Name", validators=[DataRequired()])
     event_emoji = SelectField(
         "Emoji",
-        choices=[
-            "💪🏼",
-            "🏃‍♂️",
-            "️⚽",
-            "🏋️‍♀️",
-            "😴",
-            "🛌",
-            "🌙",
-            "🎓",
-            "🧠",
-            "📚",
-            "📖",
-            "💧",
-            "🧹",
-            "🧼",
-            "🧽",
-            "🧘",
-        ],
+        choices=emojis,
         validators=[DataRequired()],
     )
     event_description = StringField("Description")
@@ -61,5 +63,4 @@ class CreateEventForm(FlaskForm):
 class RecordEventForm(FlaskForm):
     numeric_value = DecimalField("Numeric Value")
     comment = StringField("Comment")
-
     submit = SubmitField("Done")
