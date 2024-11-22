@@ -1,55 +1,48 @@
-{% extends "layout.html" %}
+{% extends "page.html" %}
 {% block title %}Login{% endblock %}
-{% block content %}
-<div class="border border-slate-900/10">
-  <div class="bg-white py-4 px-6 flex items-center relative">
-    <h1 class="text-2xl font-semibold mx-auto text-slate-700">Login</h1>
+{% block page_content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="flash-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<form method="POST" action="{{ url_for('user.login') }}">
+  {{ form.hidden_tag() }}
+  <div class="py-4">
+    {{ form.username.label(class_="py-4") }}<br>
+    {{ form.username(class_="w-full p-4 rounded-lg border border-slate-900/10",size=32) }}<br>
+    {% for error in form.username.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
   </div>
-</div>
-<div class="p-6 font-semibold text-slate-700 border-x border-slate-900/10">
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for category, message in messages %}
-  <div class="flash-{{ category }}">{{ message }}</div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-  <form method="POST" action="{{ url_for('user.login') }}">
-    {{ form.hidden_tag() }}
-    <div class="py-4">
-      {{ form.username.label(class_="py-4") }}<br>
-      {{ form.username(class_="w-full p-4 rounded-lg border border-slate-900/10",size=32) }}<br>
-      {% for error in form.username.errors %}
-      <span style="color: red;">[{{ error }}]</span>
-      {% endfor %}
-    </div>
-    <div class="py-4">
-      {{ form.password.label }}<br>
-      {{ form.password(class_="w-full p-4 rounded-lg border border-slate-900/10",size=32) }}<br>
-      {% for error in form.password.errors %}
-      <span style="color: red;">[{{ error }}]</span>
-      {% endfor %}
-    </div>
-    <div class="py-4">
-      {{ form.remember_me.label }}<br>
-      {{ form.remember_me(class_="p-4 rounded-lg border border-slate-900/10",) }}
-    </div>
-    <div class="py-4">
-      {{ form.submit(class_="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10
-      shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90")
-      }}
-    </div>
-  </form>
-  <div class="py-2">
-    <p>
-      No account yet?
-    </p>
-    <a href="{{ url_for('user.signup') }}" class="">
-      <div
-        class="bg-white p-4 text-center rounded-lg border border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90">
-        Signup
-      </div>
-    </a>
+  <div class="py-4">
+    {{ form.password.label }}<br>
+    {{ form.password(class_="w-full p-4 rounded-lg border border-slate-900/10",size=32) }}<br>
+    {% for error in form.password.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
   </div>
+  <div class="py-4">
+    {{ form.remember_me.label }}<br>
+    {{ form.remember_me(class_="p-4 rounded-lg border border-slate-900/10",) }}
+  </div>
+  <div class="py-4">
+    {{ form.submit(class_="w-full bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10
+    shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90")
+    }}
+  </div>
+</form>
+<div class="py-2">
+  <p>
+    No account yet?
+  </p>
+  <a href="{{ url_for('user.signup') }}" class="">
+    <div
+      class="bg-white p-4 text-center rounded-lg border border-slate-900/10 shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90">
+      Signup
+    </div>
+  </a>
 </div>
 {% endblock %}

@@ -1,126 +1,118 @@
-{% extends "layout.html" %}
+{% extends "page.html" %}
 {% block title %}Habit Tracker{% endblock %}
-{% block content %}
-<div class="border border-slate-900/10">
-  <div class="bg-white py-4 px-6 flex items-center relative">
-    <h1 class="text-2xl font-semibold mx-auto text-slate-700">Habit Tracker</h1>
+{% block page_content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="py-4 text-center">
+  <div class="py-2">
+    <h2 class="text-3xl">Success!</h2>
+  </div>
+  <div class="py-2">
+    {% for category, message in messages %}
+    <i class="text-2xl">{{ message }}</i>
+    {% endfor %}
   </div>
 </div>
-<div class="p-6 font-semibold text-slate-700 border-x border-slate-900/10">
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  <div class="py-4 text-center">
-    <div class="py-2">
-      <h2 class="text-3xl">Success!</h2>
-    </div>
-    <div class="py-2">
-      {% for category, message in messages %}
-      <i class="text-2xl">{{ message }}</i>
-      {% endfor %}
-    </div>
-  </div>
-  {% else %}
-  <div class="py-4">
-    <h2 class="text-2xl">Hello {{ user.name }}!</h2>
-  </div>
-  {% endif %}
-  {% endwith %}
-  {% if events_todo %}
-  <div class="py-4">
-    <h2 class="text-2xl">
-      To Do
-    </h2>
-  </div>
-  <div>
-    {% for event in events_todo %}
-    <div class="pb-4">
-      <a href="{{ url_for('event.record_event', id=event[0]) }}" class="">
-        <div
-          class="p-4 w-full text-white rounded-lg border border-slate-900/10 flex justify-between shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90"
-          style="background-color: {{ event[6] }}">
-          <div>
-            <span>
-              {{ event[3] }}
-            </span>
-            <span>
-              {{ event[1] }}
-            </span>
+{% else %}
+<div class="py-4">
+  <h2 class="text-2xl">Hello {{ user.name }}!</h2>
+</div>
+{% endif %}
+{% endwith %}
+{% if events_todo %}
+<div class="py-4">
+  <h2 class="text-2xl">
+    To Do
+  </h2>
+</div>
+<div>
+  {% for event in events_todo %}
+  <div class="pb-4">
+    <a href="{{ url_for('event.record_event', id=event[0]) }}" class="">
+      <div
+        class="p-4 w-full text-white rounded-lg border border-slate-900/10 flex justify-between shadow-md transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90"
+        style="background-color: {{ event[6] }}">
+        <div>
+          <span>
+            {{ event[3] }}
+          </span>
+          <span>
+            {{ event[1] }}
+          </span>
+        </div>
+        <div class="inline-flex items-center ">
+          {% if event[5] == 'WEEKLY' %}
+          <div class="px-2">
+            {{ event[7] }} / {{ event[8] }}
           </div>
-          <div class="inline-flex items-center ">
-            {% if event[5] == 'WEEKLY' %}
-            <div class="px-2">
-              {{ event[7] }} / {{ event[8] }}
-            </div>
+          {% endif %}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 4L16 12L8 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="pb-4">
+  <p>All done today, well done!</p>
+</div>
+{% endif %}
+{% if all_events %}
+<div class="py-4">
+  <h2 class="text-2xl">
+    Habits
+  </h2>
+</div>
+<div class="py-4">
+  <div class="bg-white px-4 rounded-lg border border-slate-900/10">
+    {% for event in all_events %}
+    <div>
+      <a href="{{ url_for('event.event', id=event[0]) }}">
+        <div class="flex justify-between py-4">
+          <div><span class="pr-2">{{ event[3] }}</span> {{ event[1] }}</div>
+          <div>
+            {% if event[7] > 0 %}
+            <span>{{ event[7] }} 🔥</span>
             {% endif %}
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 4L16 12L8 20" stroke="white" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
           </div>
         </div>
+        {% if not loop.last %}
+        <hr class="border-slate-900/10" />
+        {% endif %}
       </a>
     </div>
     {% endfor %}
   </div>
-  {% else %}
-  <div class="pb-4">
-    <p>All done today, well done!</p>
-  </div>
-  {% endif %}
-  {% if all_events %}
-  <div class="py-4">
-    <h2 class="text-2xl">
-      Habits
-    </h2>
-  </div>
-  <div class="py-4">
-    <div class="bg-white px-4 rounded-lg border border-slate-900/10">
-      {% for event in all_events %}
-      <div>
-        <a href="{{ url_for('event.event', id=event[0]) }}">
-          <div class="flex justify-between py-4">
-            <div><span class="pr-2">{{ event[3] }}</span> {{ event[1] }}</div>
-            <div>
-              {% if event[7] > 0 %}
-              <span>{{ event[7] }} 🔥</span>
-              {% endif %}
-            </div>
-          </div>
-          {% if not loop.last %}
-          <hr class="border-slate-900/10" />
-          {% endif %}
-        </a>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-  <div class="py-2">
-    <a href="{{ url_for('event.new_event') }}" class="">
-      <div class="bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md
+</div>
+{% endif %}
+<div class="py-2">
+  <a href="{{ url_for('event.new_event') }}" class="">
+    <div class="bg-slate-900 text-slate-100 p-4 text-center rounded-lg border border-slate-900/10 shadow-md
         transition duration-200 ease-in-out transform active:bg-slate-600 active:scale-90
       ">
-        Create New Habit
-      </div>
-    </a>
-  </div>
-  <div class="py-2">
-    <a href="{{ url_for('user.profile')}}">
-      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10
+      Create New Habit
+    </div>
+  </a>
+</div>
+<div class="py-2">
+  <a href="{{ url_for('user.profile')}}">
+    <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10
         transition duration-200 ease-in-out shadow-md transform active:bg-slate-100 active:scale-90
       ">
-        Profile
-      </div>
-    </a>
-  </div>
-  <div class="py-2">
-    <a href="{{ url_for('user.logout') }}" class="">
-      <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10
+      Profile
+    </div>
+  </a>
+</div>
+<div class="py-2">
+  <a href="{{ url_for('user.logout') }}" class="">
+    <div class="bg-white p-4 text-center rounded-lg border border-slate-900/10
         transition duration-200 ease-in-out shadow-md transform active:bg-slate-100 active:scale-90
       ">
-        Logout
-      </div>
-    </a>
-  </div>
+      Logout
+    </div>
+  </a>
 </div>
 {% endblock %}
