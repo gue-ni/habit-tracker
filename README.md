@@ -5,6 +5,8 @@ habits by tracking streaks and visualizing your progress. It can be used to
 track simple occurences, like visits to the gym, or numeric data like your
 bodyweight.
 
+![Habit Tracker Screenshot](https://www.jakobmaier.at/projects/img/habit-tracker.png)
+
 ## How to run
 
 ### Development
