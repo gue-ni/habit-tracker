@@ -257,7 +257,7 @@ def get_todo_weekly_events(user_id, current_date, last_monday=get_last_monday())
         SELECT e.id, e.event_name, e.event_type, e.event_emoji, e.description, e.event_repeat, e.hex_color, COUNT(o.id) AS count, e.event_repeat_per_week, MAX(o.occured_at) AS last
         FROM events e
         LEFT JOIN
-        (SELECT * FROM occurences oc WHERE oc.occured_at >= (select date('now', 'weekday 0', '-7 days'))) AS o
+        (SELECT * FROM occurences oc WHERE (SELECT DATE('now', 'weekday 1', CASE WHEN strftime('%w', 'now') = '1' THEN '0 days' ELSE '-7 days' END)) <= oc.occured_at) AS o
         ON e.id = o.event_id
         WHERE e.user_id = ? AND e.event_repeat = 'WEEKLY' AND e.event_type != 'QUIT'
         GROUP BY e.id
