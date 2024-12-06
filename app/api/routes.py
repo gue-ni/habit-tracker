@@ -36,7 +36,7 @@ def api_streaks():
         return jsonify([])
 
 
-@bp.route("/occurences/<int:event_id>")
+@bp.route("/event/<int:event_id>/occurences")
 @login_required
 def api_occurences(event_id):
     event = db.get_event_by_id(event_id=event_id, user_id=current_user.id)
