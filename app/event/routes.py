@@ -194,6 +194,7 @@ def record_event(id):
             date=date_param,
             calendar=calendar,
             is_today=(date_param == current_date),
+            current_date=get_current_date()
         )
 
 
