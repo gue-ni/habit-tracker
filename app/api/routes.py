@@ -16,16 +16,6 @@ def api_todo():
         return jsonify([])
 
 
-@bp.route("/events")
-@login_required
-def api_events():
-    events = db.get_all_events(current_user.id)
-    if events:
-        return jsonify(events)
-    else:
-        return jsonify([])
-
-
 @bp.route("/streaks")
 @login_required
 def api_streaks():
@@ -36,7 +26,17 @@ def api_streaks():
         return jsonify([])
 
 
-@bp.route("/events/<int:event_id>")
+@bp.route("/event")
+@login_required
+def api_events():
+    events = db.get_all_events(current_user.id)
+    if events:
+        return jsonify(events)
+    else:
+        return jsonify([])
+
+
+@bp.route("/event/<int:event_id>")
 @login_required
 def api_occurences(event_id):
     event = db.get_event_by_id(event_id=event_id, user_id=current_user.id)
