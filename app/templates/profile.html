@@ -22,6 +22,18 @@
       </div>
     </div>
   </div>
+  {% if admin_info %}
+  <div class="py-5">
+    <div class="py-2">
+      <h2>Monthly Recurring Users</h2>
+    </div>
+    <div class="w-full bg-white rounded-lg border border-slate-900/10 p-4">
+      <div class="text-xl text-center">
+        {{ admin_info.mrr }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
   <div class="py-5">
     <a href="{{ url_for('user.change_password') }}" class="">
       <div

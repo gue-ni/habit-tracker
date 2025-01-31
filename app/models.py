@@ -23,6 +23,9 @@ class User(UserMixin):
     def get_id(self):
         return str(self.id)
 
+    def is_admin(self):
+        return int(self.id) == 1
+
 
 class AppException(Exception):
     def __init__(self, message, status_code):

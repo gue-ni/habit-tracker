@@ -345,6 +345,12 @@ def get_all_occurences_of_event(event_id):
     )
 
 
+def get_monthly_recurring_users():
+    return fetchone(
+        "select count(distinct e.user_id) as user_count from occurences o join events e on o. event_id = e.id where o.occured_at >= DATE('now', '-30 days')"
+    )
+
+
 def get_all_measurements(event_id):
     query = "SELECT occured_at, numeric_value FROM occurences WHERE event_id = ? AND numeric_value NOT NULL ORDER BY occured_at"
     return fetchall(query, (event_id,))

@@ -60,9 +60,4 @@ def create_app():
 
     app.register_blueprint(api_bp, url_prefix="/api")
 
-
-    @app.route("/test/")
-    def test_page():
-        return "<h1>Testing the Flask Application Factory Pattern</h1>"
-
     return app

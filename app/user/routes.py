@@ -83,7 +83,15 @@ def logout():
 @login_required
 def profile():
     user = db.get_user_by_id(current_user.id)
-    return render_template("profile.html", user=user)
+
+    admin_info = None
+
+    if current_user.is_admin():
+        mrr = db.get_monthly_recurring_users()
+        admin_info = {}
+        admin_info["mrr"] = mrr[0]
+
+    return render_template("profile.html", user=user, admin_info=admin_info)
 
 
 @bp.route("/delete", methods=["POST"])
@@ -104,10 +112,7 @@ def change_password():
         new_password = form.new_password.data
 
         user = db.get_user_by_id(current_user.id)
-        print(user)
         (id, name, old_hash, joined) = user
-        print(f"old_hash={old_hash}, new_password={new_password}, old_password={old_password}")
-
 
         if bcrypt.checkpw(old_password.encode("utf-8"), old_hash):
             new_hash = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
