@@ -14,6 +14,7 @@ class EventType(Enum):
 
 class EventFrequency(Enum):
     DAILY = "DAILY"
+    EVERY_OTHER_DAY = "EVERY_OTHER_DAY"
     ONE_PER_WEEK = "1_PER_WEEK"
     TWO_PER_WEEK = "2_PER_WEEK"
     THREE_PER_WEEK = "3_PER_WEEK"
@@ -27,6 +28,7 @@ pretty_enum = {
     "MEASURE": "Numeric Value",
     "QUIT": "Days Since",
     "DAILY": "Daily",
+    "EVERY_OTHER_DAY": "Every Other Day",
     "1_PER_WEEK": "Once Per Week",
     "2_PER_WEEK": "Twice Per Week",
     "3_PER_WEEK": "3 Times Per Week",
