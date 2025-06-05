@@ -2,6 +2,7 @@ services:
   app:
     container_name: habit-tracker
     build: .
+    restart: always
     # flask requires SIGINT to stop gracefully
     # (default stop signal from Compose is SIGTERM)
     stop_signal: SIGINT
