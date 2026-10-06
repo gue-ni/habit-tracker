@@ -60,4 +60,7 @@ def create_app():
 
     app.register_blueprint(api_bp, url_prefix="/api")
 
+    from app.admin import bp as admin_bp
+    app.register_blueprint(admin_bp, url_prefix="/admin")
+
     return app
