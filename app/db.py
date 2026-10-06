@@ -90,6 +90,7 @@ def fetchall(query, params=()):
     con = None
     try:
         con = sqlite3.connect(database)
+        con.row_factory = sqlite3.Row
         cur = con.cursor()
         cur.execute(query, params)
         rows = cur.fetchall()
@@ -107,6 +108,7 @@ def fetchone(query, params=()):
     con = None
     try:
         con = sqlite3.connect(database)
+        con.row_factory = sqlite3.Row
         cur = con.cursor()
         cur.execute(query, params)
         row = cur.fetchone()
@@ -124,6 +126,7 @@ def execute(query, params=()):
     con = None
     try:
         con = sqlite3.connect(database)
+        con.row_factory = sqlite3.Row
         cur = con.cursor()
         cur.execute(query, params)
         con.commit()
@@ -203,6 +206,25 @@ def get_user_by_id(id):
     query = "SELECT id, name, password, joined FROM users WHERE id = ?"
     return fetchone(query, (id,))
 
+
+def get_all_user_activity():
+    query = """
+    SELECT
+    u.id,
+    u.name,
+    u.joined AS signup_date,
+    latest.occured_at AS last_activity,
+    latest.event_name AS last_logged_event
+    FROM users u
+    LEFT JOIN (
+    SELECT e.user_id, e.event_name, o.occured_at,
+            ROW_NUMBER() OVER (PARTITION BY e.user_id
+                                ORDER BY o.occured_at DESC, o.id DESC) AS rn
+    FROM occurences o
+    JOIN events e ON e.id = o.event_id
+    ) latest ON latest.user_id = u.id AND latest.rn = 1;
+    """
+    return fetchall(query)
 
 def insert_event(
     event_name,
